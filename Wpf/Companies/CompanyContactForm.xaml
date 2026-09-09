@@ -1,0 +1,140 @@
+﻿<Window x:Class="Wpf.Companies.CompanyContactForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+        xmlns:local="clr-namespace:Wpf.Core.Behaviors"
+        Title="İletişim Tanımı"
+        Width="600"
+        Height="650"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize">
+
+    <Grid Margin="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="İletişim Tanımı"
+                   FontSize="22"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,20" />
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto">
+
+            <dxlc:LayoutControl>
+
+                <dxlc:LayoutGroup Orientation="Vertical">
+
+                    <dxlc:LayoutGroup Header="İletişim Bilgileri"
+                                      Orientation="Vertical">
+
+                        <dxlc:LayoutItem Label="İletişim Tipi">
+
+                            <dxe:ComboBoxEdit x:Name="ContactTypeComboBox"
+                                              IncrementalFiltering="True"
+                                              FilterCondition="Contains"
+                                              ValidateOnTextInput="False"
+                                              AutoComplete="False"
+                                              ImmediatePopup="True" />
+
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Ad">
+
+                            <dxe:TextEdit x:Name="FirstNameTextEdit"
+                                          local:ProperCaseBehavior.IsEnabled="True" />
+
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Soyad">
+
+                            <dxe:TextEdit x:Name="LastNameTextEdit"
+                                          local:ProperCaseBehavior.IsEnabled="True" />
+
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Ünvan">
+
+                            <dxe:TextEdit x:Name="TitleTextEdit"
+                                          local:ProperCaseBehavior.IsEnabled="True" />
+
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Telefon">
+
+                            <dxe:TextEdit x:Name="PhoneTextEdit"
+                                          Style="{StaticResource PhoneTextEditStyle}"
+                                          local:PhoneMaskBehavior.IsEnabled="True" />
+
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Cep Telefonu">
+
+                            <dxe:TextEdit x:Name="MobilePhoneTextEdit"
+                                          Style="{StaticResource PhoneTextEditStyle}"
+                                          local:PhoneMaskBehavior.IsEnabled="True" />
+
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="E-posta">
+
+                            <dxe:TextEdit x:Name="EmailTextEdit" />
+
+                        </dxlc:LayoutItem>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,10,0,0">
+
+                            <CheckBox x:Name="IsAuthorizedCheckBox"
+                                      Content="Yetkili"
+                                      Margin="0,0,20,0" />
+
+                            <CheckBox x:Name="IsDefaultCheckBox"
+                                      Content="Varsayılan" />
+
+                        </StackPanel>
+
+                    </dxlc:LayoutGroup>
+
+                </dxlc:LayoutGroup>
+
+            </dxlc:LayoutControl>
+
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,20,0,0">
+
+            <dx:SimpleButton Content="İptal"
+                             Width="100"
+                             Height="34"
+                             Margin="0,0,10,0"
+                             Glyph="{dx:DXImage Image=Close_16x16.png}"
+                             GlyphHeight="16"
+                             GlyphWidth="16"
+                             Style="{StaticResource GridActionButtonStyle}"
+                             Click="CancelButton_Click" />
+
+            <dx:SimpleButton Content="Tamam"
+                             Width="100"
+                             Height="34"
+                             Glyph="{dx:DXImage Image=Save_16x16.png}"
+                             GlyphHeight="16"
+                             GlyphWidth="16"
+                             Style="{StaticResource GridActionButtonStyle}"
+                             Click="SaveButton_Click" />
+
+        </StackPanel>
+
+    </Grid>
+
+</Window>

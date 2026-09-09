@@ -1,0 +1,38 @@
+[
+  {
+    "id": "20000000-0000-0000-0000-000000000001",
+    "name": "Merkez",
+    "code": "MERKEZ",
+    "isActive": true
+  },
+  {
+    "id": "20000000-0000-0000-0000-000000000002",
+    "name": "Şube",
+    "code": "SUBE",
+    "isActive": true
+  },
+  {
+    "id": "20000000-0000-0000-0000-000000000003",
+    "name": "Fatura",
+    "code": "FATURA",
+    "isActive": true
+  },
+  {
+    "id": "20000000-0000-0000-0000-000000000004",
+    "name": "Sevkiyat",
+    "code": "SEVKIYAT",
+    "isActive": true
+  },
+  {
+    "id": "20000000-0000-0000-0000-000000000005",
+    "name": "Depo",
+    "code": "DEPO",
+    "isActive": true
+  },
+  {
+    "id": "20000000-0000-0000-0000-000000000006",
+    "name": "İrtibat",
+    "code": "IRTIBAT",
+    "isActive": true
+  }
+]

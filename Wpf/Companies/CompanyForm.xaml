@@ -1,0 +1,318 @@
+﻿<UserControl x:Class="Wpf.Companies.CompanyForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:behavior="clr-namespace:Wpf.Core.Behaviors"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol">
+
+    <Grid Margin="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Firma Tanımı"
+                   FontSize="24"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,20" />
+
+        <Grid Grid.Row="1">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <dxlc:LayoutControl Grid.Row="0">
+
+                <dxlc:LayoutGroup Orientation="Vertical">
+
+                    <dxlc:LayoutGroup Header="Genel Bilgiler"
+                                      Orientation="Vertical">
+
+                        <dxlc:LayoutItem Label="Firma Adı">
+                            <dxe:TextEdit x:Name="CompanyNameTextEdit"
+                                          behavior:ProperCaseBehavior.IsEnabled="True" />
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Kısa Ad">
+                            <dxe:TextEdit x:Name="ShortNameTextEdit"
+                                          behavior:ProperCaseBehavior.IsEnabled="True" />
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Vergi No">
+                            <dxe:TextEdit x:Name="TaxNumberTextEdit" />
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Vergi Dairesi">
+                            <dxe:ComboBoxEdit x:Name="TaxOfficeComboBox"
+                                              IncrementalFiltering="True"
+                                              FilterCondition="Contains"
+                                              ValidateOnTextInput="False"
+                                              AutoComplete="False"
+                                              ImmediatePopup="True" />
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Ticaret Sicil No">
+                            <dxe:TextEdit x:Name="TradeRegistryNumberTextEdit" />
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="MERSİS No">
+                            <dxe:TextEdit x:Name="MersisNumberTextEdit" />
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Web Sitesi">
+                            <dxe:TextEdit x:Name="WebsiteTextEdit" />
+                        </dxlc:LayoutItem>
+
+                    </dxlc:LayoutGroup>
+
+                </dxlc:LayoutGroup>
+
+            </dxlc:LayoutControl>
+
+            <Grid Grid.Row="1"
+                  Margin="0,15,0,0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="200" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="Adres Bilgileri"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,8" />
+
+                <Grid Grid.Row="1">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,0,8">
+
+                        <dx:SimpleButton Content="Yeni"
+                                         Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Add.svg'}"
+                                         GlyphHeight="16"
+                                         GlyphWidth="16"
+                                         Style="{StaticResource GridActionButtonStyle}"
+                                         Click="NewAddressButton_Click" />
+
+                        <dx:SimpleButton Content="Düzenle"
+                                         Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Edit.svg'}"
+                                         GlyphHeight="16"
+                                         GlyphWidth="16"
+                                         Style="{StaticResource GridActionButtonStyle}"
+                                         Click="EditAddressButton_Click" />
+
+                        <dx:SimpleButton Content="Sil"
+                                         Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Delete.svg'}"
+                                         GlyphHeight="16"
+                                         GlyphWidth="16"
+                                         Style="{StaticResource GridActionButtonStyle}"
+                                         Click="DeleteAddressButton_Click" />
+
+                    </StackPanel>
+
+                    <dxg:GridControl x:Name="AddressesGridControl"
+                                     Grid.Row="1">
+
+                        <dxg:GridControl.View>
+                            <dxg:TableView Style="{StaticResource ReadOnlyTableViewStyle}" />
+                        </dxg:GridControl.View>
+
+                        <dxg:GridControl.Columns>
+
+                            <dxg:GridColumn FieldName="AddressType"
+                                            Header="Adres Tipi"
+                                            Width="120"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="City"
+                                            Header="İl"
+                                            Width="120"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="District"
+                                            Header="İlçe"
+                                            Width="120"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="Address"
+                                            Header="Adres"
+                                            Width="*"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="PostalCode"
+                                            Header="Posta Kodu"
+                                            Width="100"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="IsDefault"
+                                            Header="Varsayılan"
+                                            Width="100"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                        </dxg:GridControl.Columns>
+
+                    </dxg:GridControl>
+
+                </Grid>
+
+            </Grid>
+
+            <Grid Grid.Row="2"
+                  Margin="0,15,0,0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="200" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="İletişim Bilgileri"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,8" />
+
+                <Grid Grid.Row="1">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,0,8">
+
+                        <dx:SimpleButton Content="Yeni"
+                                         Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Add.svg'}"
+                                         GlyphHeight="16"
+                                         GlyphWidth="16"
+                                         Style="{StaticResource GridActionButtonStyle}"
+                                         Click="NewContactButton_Click" />
+
+                        <dx:SimpleButton Content="Düzenle"
+                                         Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Edit.svg'}"
+                                         GlyphHeight="16"
+                                         GlyphWidth="16"
+                                         Style="{StaticResource GridActionButtonStyle}"
+                                         Click="EditContactButton_Click" />
+
+                        <dx:SimpleButton Content="Sil"
+                                         Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Delete.svg'}"
+                                         GlyphHeight="16"
+                                         GlyphWidth="16"
+                                         Style="{StaticResource GridActionButtonStyle}"
+                                         Click="DeleteContactButton_Click" />
+
+                    </StackPanel>
+
+                    <dxg:GridControl x:Name="ContactsGridControl"
+                                     Grid.Row="1">
+
+                        <dxg:GridControl.View>
+                            <dxg:TableView Style="{StaticResource ReadOnlyTableViewStyle}" />
+                        </dxg:GridControl.View>
+
+                        <dxg:GridControl.Columns>
+
+                            <dxg:GridColumn FieldName="ContactType"
+                                            Header="İletişim Tipi"
+                                            Width="120"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="FirstName"
+                                            Header="Ad"
+                                            Width="120"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="LastName"
+                                            Header="Soyad"
+                                            Width="120"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="Title"
+                                            Header="Ünvan"
+                                            Width="150"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="Phone"
+                                            Header="Telefon"
+                                            Width="120"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="MobilePhone"
+                                            Header="Cep Telefonu"
+                                            Width="120"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="Email"
+                                            Header="E-posta"
+                                            Width="*"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="IsAuthorized"
+                                            Header="Yetkili"
+                                            Width="80"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                            <dxg:GridColumn FieldName="IsDefault"
+                                            Header="Varsayılan"
+                                            Width="100"
+                                            HorizontalHeaderContentAlignment="Center" />
+
+                        </dxg:GridControl.Columns>
+
+                    </dxg:GridControl>
+
+                </Grid>
+
+            </Grid>
+
+        </Grid>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,20,0,0">
+
+            <dx:SimpleButton Content="İptal"
+                             Width="100"
+                             Height="34"
+                             Margin="0,0,10,0"
+                             Glyph="{dx:DXImage Image=Close_16x16.png}"
+                             GlyphHeight="16"
+                             GlyphWidth="16"
+                             GlyphAlignment="Left"
+                             CornerRadius="4" />
+
+            <dx:SimpleButton Content="Kaydet"
+                             Width="100"
+                             Height="34"
+                             Glyph="{dx:DXImage Image=Save_16x16.png}"
+                             GlyphHeight="16"
+                             GlyphWidth="16"
+                             GlyphAlignment="Left"
+                             CornerRadius="4"
+                             Click="SaveButton_Click" />
+
+        </StackPanel>
+
+    </Grid>
+
+</UserControl>

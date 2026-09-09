@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ControlTemplate x:Key="EditorValidationTemplate">
+
+        <DockPanel>
+
+            <AdornedElementPlaceholder />
+
+            <TextBlock Text="!"
+                       Foreground="Red"
+                       FontWeight="Bold"
+                       Margin="5,0,0,0"
+                       VerticalAlignment="Center"
+                       ToolTip="Girilen değer geçersiz." />
+
+        </DockPanel>
+
+    </ControlTemplate>
+
+</ResourceDictionary>

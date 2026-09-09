@@ -1,0 +1,118 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors">
+
+    <Style TargetType="{x:Type dxg:GridColumn}">
+        <Setter Property="ReadOnly"
+                Value="True" />
+        <Setter Property="AllowEditing"
+                Value="False" />
+    </Style>
+
+    <Style x:Key="PhoneTextEditSettingsStyle"
+           TargetType="{x:Type dxe:TextEditSettings}">
+
+        <Setter Property="MaskType"
+                Value="Simple" />
+
+        <Setter Property="Mask"
+                Value="\0(000) 000 00 00" />
+
+        <Setter Property="MaskUseAsDisplayFormat"
+                Value="True" />
+
+    </Style>
+
+    <Style x:Key="ReadOnlyTableViewStyle"
+           TargetType="{x:Type dxg:TableView}">
+
+        <Setter Property="AllowEditing"
+                Value="False" />
+
+        <Setter Property="NavigationStyle"
+                Value="Row" />
+
+        <Setter Property="ShowIndicator"
+                Value="False" />
+
+        <Setter Property="AlternationCount"
+                Value="2" />
+
+        <Setter Property="AlternateRowBackground"
+                Value="#E2E8F0" />
+
+        <Setter Property="ShowGroupPanel"
+                Value="False" />
+
+        <Setter Property="ShowAutoFilterRow"
+                Value="True" />
+
+        <Setter Property="ShowSearchPanelMode"
+                Value="Always" />
+
+        <Setter Property="ColumnHeaderContentStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type dxg:HeaderContentControl}">
+
+                    <Setter Property="FontSize"
+                            Value="12" />
+
+                    <Setter Property="FontWeight"
+                            Value="Bold" />
+
+                    <Setter Property="VerticalContentAlignment"
+                            Value="Center" />
+
+                </Style>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="RowStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type dxg:RowControl}">
+
+                    <Style.Triggers>
+
+                        <Trigger Property="SelectionState"
+                                 Value="Selected">
+
+                            <Setter Property="Background"
+                                    Value="#B7E4C7" />
+
+                            <Setter Property="Foreground"
+                                    Value="#1B4332" />
+
+                        </Trigger>
+
+                        <Trigger Property="SelectionState"
+                                 Value="Focused">
+
+                            <Setter Property="Background"
+                                    Value="#B7E4C7" />
+
+                            <Setter Property="Foreground"
+                                    Value="#1B4332" />
+
+                        </Trigger>
+
+                        <Trigger Property="SelectionState"
+                                 Value="FocusedAndSelected">
+
+                            <Setter Property="Background"
+                                    Value="#B7E4C7" />
+
+                            <Setter Property="Foreground"
+                                    Value="#1B4332" />
+
+                        </Trigger>
+
+                    </Style.Triggers>
+
+                </Style>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "30000000-0000-0000-0000-000000000001",
+    "name": "Yetkili",
+    "code": "YETKILI",
+    "isActive": true
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000002",
+    "name": "Muhasebe",
+    "code": "MUHASEBE",
+    "isActive": true
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000003",
+    "name": "Satış",
+    "code": "SATIS",
+    "isActive": true
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000004",
+    "name": "Satın Alma",
+    "code": "SATINALMA",
+    "isActive": true
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000005",
+    "name": "Finans",
+    "code": "FINANS",
+    "isActive": true
+  },
+  {
+    "id": "30000000-0000-0000-0000-000000000006",
+    "name": "Teknik",
+    "code": "TEKNIK",
+    "isActive": true
+  }
+]
