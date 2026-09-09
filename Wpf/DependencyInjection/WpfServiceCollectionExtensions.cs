@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Wpf.Api;
+using Wpf.State;
 
 namespace Wpf.DependencyInjection;
 
@@ -23,6 +24,8 @@ public static class WpfServiceCollectionExtensions
         {
             client.BaseAddress = new Uri(baseUrl);
         });
+
+        services.AddSingleton<CompanyState>();
 
         return services;
     }

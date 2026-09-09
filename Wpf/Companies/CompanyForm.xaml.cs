@@ -5,6 +5,7 @@ using Abstractions.Core.Results;
 using System.Collections.ObjectModel;
 using System.Windows;
 using Wpf.Companies.Models;
+using Wpf.State;
 using MessageBox = System.Windows.MessageBox;
 using UserControl = System.Windows.Controls.UserControl;
 
@@ -16,6 +17,7 @@ public partial class CompanyForm : UserControl, ITransientService
 
     private readonly IMasterApiClient _masterApiClient;
     private readonly ICompanyApiClient _companyApiClient;
+    private readonly CompanyState _companyState;
     private readonly ObservableCollection<CompanyAddressItem> _addresses = [];
     private readonly ObservableCollection<CompanyContactItem> _contacts = [];
     private List<MasterDefinitionResponse> _taxOffices = [];
@@ -25,13 +27,15 @@ public partial class CompanyForm : UserControl, ITransientService
 
     #region Constructors
 
-    public CompanyForm(IMasterApiClient masterApiClient , ICompanyApiClient companyApiClient)
+    public CompanyForm(IMasterApiClient masterApiClient , ICompanyApiClient companyApiClient , CompanyState companyState)
     {
         ArgumentNullException.ThrowIfNull(masterApiClient);
         ArgumentNullException.ThrowIfNull(companyApiClient);
+        ArgumentNullException.ThrowIfNull(companyState);
 
         _masterApiClient = masterApiClient;
         _companyApiClient = companyApiClient;
+        _companyState = companyState;
 
         InitializeComponent();
 
@@ -118,9 +122,9 @@ public partial class CompanyForm : UserControl, ITransientService
         }
 
         MessageBoxResult result = MessageBox.Show(
-            "Seçili adres silinecek. Devam etmek istiyor musunuz?",
-            "Adres Sil",
-            MessageBoxButton.YesNo,
+            "Seçili adres silinecek. Devam etmek istiyor musunuz?" ,
+            "Adres Sil" ,
+            MessageBoxButton.YesNo ,
             MessageBoxImage.Question);
 
         if (result != MessageBoxResult.Yes)
@@ -196,9 +200,9 @@ public partial class CompanyForm : UserControl, ITransientService
         }
 
         MessageBoxResult result = MessageBox.Show(
-            "Seçili iletişim silinecek. Devam etmek istiyor musunuz?",
-            "İletişim Sil",
-            MessageBoxButton.YesNo,
+            "Seçili iletişim silinecek. Devam etmek istiyor musunuz?" ,
+            "İletişim Sil" ,
+            MessageBoxButton.YesNo ,
             MessageBoxImage.Question);
 
         if (result != MessageBoxResult.Yes)
@@ -251,6 +255,21 @@ public partial class CompanyForm : UserControl, ITransientService
                     return;
                 }
 
+                IDataResult<CompanyModel> companyResult = await _companyApiClient.GetByIdAsync(_companyId.Value);
+
+                if (!companyResult.Success)
+                {
+                    MessageBox.Show(
+                        companyResult.Message ,
+                        "Firma Güncelle" ,
+                        MessageBoxButton.OK ,
+                        MessageBoxImage.Warning);
+
+                    return;
+                }
+
+                _companyState.Update(companyResult.Data);
+
                 MessageBox.Show(
                     result.Message ,
                     "Firma Güncelle" ,
@@ -299,6 +318,21 @@ public partial class CompanyForm : UserControl, ITransientService
                 return;
             }
 
+            IDataResult<CompanyModel> createdCompanyResult = await _companyApiClient.GetByIdAsync(createResult.Data);
+
+            if (!createdCompanyResult.Success)
+            {
+                MessageBox.Show(
+                    createdCompanyResult.Message ,
+                    "Firma" ,
+                    MessageBoxButton.OK ,
+                    MessageBoxImage.Warning);
+
+                return;
+            }
+
+            _companyState.Add(createdCompanyResult.Data);
+
             MessageBox.Show(
                 createResult.Message ,
                 "Firma Kaydet" ,
@@ -344,7 +378,6 @@ public partial class CompanyForm : UserControl, ITransientService
             CompanyModel company = result.Data;
 
             _companyId = company.Id;
-
             CompanyNameTextEdit.Text = company.Name;
             ShortNameTextEdit.Text = company.ShortName;
             TaxNumberTextEdit.Text = company.TaxNumber;

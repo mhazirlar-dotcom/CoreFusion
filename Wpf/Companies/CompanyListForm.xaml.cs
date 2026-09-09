@@ -2,10 +2,10 @@
 using Abstractions.Application.Services.Api;
 using Abstractions.Core.DependencyInjection;
 using Abstractions.Core.Results;
-using System.Collections.ObjectModel;
 using System.Windows;
-using UserControl = System.Windows.Controls.UserControl;
+using Wpf.State;
 using MessageBox = System.Windows.MessageBox;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace Wpf.Companies;
 
@@ -14,7 +14,7 @@ public partial class CompanyListForm : UserControl, ITransientService
     #region Fields
 
     private readonly ICompanyApiClient _companyApiClient;
-    private readonly ObservableCollection<CompanyModel> _companies = [];
+    private readonly CompanyState _companyState;
 
     #endregion Fields
 
@@ -27,15 +27,17 @@ public partial class CompanyListForm : UserControl, ITransientService
 
     #region Constructors
 
-    public CompanyListForm(ICompanyApiClient companyApiClient)
+    public CompanyListForm(ICompanyApiClient companyApiClient , CompanyState companyState)
     {
         ArgumentNullException.ThrowIfNull(companyApiClient);
+        ArgumentNullException.ThrowIfNull(companyState);
 
         _companyApiClient = companyApiClient;
+        _companyState = companyState;
 
         InitializeComponent();
 
-        CompaniesGridControl.ItemsSource = _companies;
+        CompaniesGridControl.ItemsSource = _companyState.Companies;
 
         Loaded += CompanyListForm_Loaded;
     }
@@ -46,7 +48,10 @@ public partial class CompanyListForm : UserControl, ITransientService
 
     private async void CompanyListForm_Loaded(object sender , RoutedEventArgs e)
     {
-        await LoadDataAsync();
+        if (_companyState.Companies.Count == 0)
+        {
+            await LoadDataAsync();
+        }
     }
 
     private void NewButton_Click(object sender , RoutedEventArgs e)
@@ -84,10 +89,10 @@ public partial class CompanyListForm : UserControl, ITransientService
         }
 
         MessageBoxResult result = MessageBox.Show(
-        $"'{selectedCompany.Name}' firması silinecek. Devam etmek istiyor musunuz?",
-        "Firma Sil",
-        MessageBoxButton.YesNo,
-        MessageBoxImage.Question);
+            $"'{selectedCompany.Name}' firması silinecek. Devam etmek istiyor musunuz?" ,
+            "Firma Sil" ,
+            MessageBoxButton.YesNo ,
+            MessageBoxImage.Question);
 
         if (result != MessageBoxResult.Yes)
         {
@@ -123,12 +128,7 @@ public partial class CompanyListForm : UserControl, ITransientService
                 return;
             }
 
-            _companies.Clear();
-
-            foreach (CompanyModel company in result.Data)
-            {
-                _companies.Add(company);
-            }
+            _companyState.SetCompanies(result.Data);
         }
         catch (Exception exception)
         {
@@ -157,7 +157,7 @@ public partial class CompanyListForm : UserControl, ITransientService
                 return;
             }
 
-            _companies.Remove(company);
+            _companyState.Remove(company.Id);
 
             MessageBox.Show(
                 result.Message ,
