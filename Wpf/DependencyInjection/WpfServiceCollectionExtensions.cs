@@ -25,7 +25,10 @@ public static class WpfServiceCollectionExtensions
             client.BaseAddress = new Uri(baseUrl);
         });
 
-        services.AddSingleton<CompanyState>();
+        services.AddHttpClient<ICompanyPeriodApiClient , CompanyPeriodApiClient>(client =>
+        {
+            client.BaseAddress = new Uri(baseUrl);
+        });
 
         return services;
     }

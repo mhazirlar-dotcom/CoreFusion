@@ -33,5 +33,7 @@ public class Company : Entity<Guid>
 
     public ICollection<CompanyContact> CompanyContacts { get; set; } = [];
 
+    public ICollection<CompanyPeriod> CompanyPeriods { get; set; } = [];
+
     #endregion Properties
 }

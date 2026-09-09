@@ -1,15 +1,24 @@
 ﻿using Abstractions.Application.Models.Master;
+using Abstractions.Core.DependencyInjection;
 using System.Collections.ObjectModel;
 
 namespace Wpf.State;
 
-public class CompanyState
+public class CompanyState : ISingletonService
 {
     #region Properties
 
     public ObservableCollection<CompanyModel> Companies { get; } = [];
 
+    public CompanyModel? ActiveCompany { get; private set; }
+
     #endregion Properties
+
+    #region Events
+
+    public event EventHandler<CompanyModel?>? ActiveCompanyChanged;
+
+    #endregion Events
 
     #region Methods
 
@@ -23,6 +32,27 @@ public class CompanyState
         {
             Companies.Add(company);
         }
+
+        if (Companies.Count == 0)
+        {
+            SetActiveCompany(null);
+            return;
+        }
+
+        if (ActiveCompany is not null)
+        {
+            CompanyModel? existingCompany = Companies.FirstOrDefault(item => item.Id == ActiveCompany.Id);
+
+            if (existingCompany is not null)
+            {
+                SetActiveCompany(existingCompany);
+                return;
+            }
+        }
+
+        CompanyModel? activeCompany = Companies.FirstOrDefault(company => company.IsActive);
+
+        SetActiveCompany(activeCompany ?? Companies[0]);
     }
 
     public void Add(CompanyModel company)
@@ -36,9 +66,18 @@ public class CompanyState
     {
         CompanyModel? company = Companies.FirstOrDefault(item => item.Id == companyId);
 
-        if (company is not null)
+        if (company is null)
         {
-            Companies.Remove(company);
+            return;
+        }
+
+        bool isActiveCompany = ActiveCompany?.Id == companyId;
+
+        Companies.Remove(company);
+
+        if (isActiveCompany)
+        {
+            SetActiveCompany(Companies.FirstOrDefault(item => item.IsActive) ?? Companies.FirstOrDefault());
         }
     }
 
@@ -51,9 +90,32 @@ public class CompanyState
             if (Companies[index].Id == company.Id)
             {
                 Companies[index] = company;
+
+                if (ActiveCompany?.Id == company.Id)
+                {
+                    SetActiveCompany(company);
+                }
+
                 return;
             }
         }
+    }
+
+    public void SetActiveCompany(CompanyModel? company)
+    {
+        if (company is not null && !Companies.Any(item => item.Id == company.Id))
+        {
+            throw new InvalidOperationException("Seçilen firma firma listesinde bulunmuyor.");
+        }
+
+        if (ActiveCompany?.Id == company?.Id)
+        {
+            return;
+        }
+
+        ActiveCompany = company;
+
+        ActiveCompanyChanged?.Invoke(this , ActiveCompany);
     }
 
     #endregion Methods

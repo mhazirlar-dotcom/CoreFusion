@@ -13,12 +13,13 @@ public static class TableNames
     public const string TaxOffices = nameof(TaxOffices);
     public const string AddressTypes = nameof(AddressTypes);
     public const string ContactTypes = nameof(ContactTypes);
+    public const string CompanyPeriods = nameof(CompanyPeriods);
 
     #endregion Master
 
     #region Company
     public const string Categories = nameof(Categories);
-    public const string Products = nameof(Products);
+    public const string Products = nameof(Products);    
 
     #endregion Company
 }

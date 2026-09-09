@@ -1,5 +1,6 @@
 ﻿using Abstractions.Application.Models.Master;
 using Abstractions.Application.Services.Api;
+using Abstractions.Core.DependencyInjection;
 using System.Net.Http;
 using System.Net.Http.Json;
 
