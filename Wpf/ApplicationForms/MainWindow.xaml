@@ -1,68 +1,144 @@
 ﻿<Window x:Class="Wpf.ApplicationForms.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
-        Title="CoreFusion"
-        WindowState="Maximized"
-        WindowStyle="None"
-        ResizeMode="NoResize"
-        Background="#F5F6F8">
-
+     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+     Title="CoreFusion"
+     WindowState="Maximized"
+     WindowStyle="None"
+     ResizeMode="NoResize"
+     Background="#F5F6F8"
+     Loaded="MainWindow_Loaded">
     <Grid>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
+            <RowDefinition Height="72" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Özel Başlık Çubuğu -->
+        <!-- Başlık Çubuğu -->
 
         <Border Grid.Row="0"
-                Background="#1F2937"
-                MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            Background="#1F2937"
+            MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
 
             <Grid>
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0"
-                           Text="CoreFusion"
-                           Foreground="White"
-                           FontSize="15"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center"
-                           Margin="15,0,0,0" />
+                       Text="CoreFusion"
+                       Foreground="White"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Margin="15,0,0,0" />
 
                 <dx:SimpleButton Grid.Column="1"
-                                 Content="─"
-                                 Width="50"
-                                 Height="40"
-                                 BorderThickness="0"
-                                 Background="Transparent"
-                                 Foreground="White"
-                                 FontSize="18"
-                                 Click="MinimizeButton_Click" />
+                             Content="─"
+                             Width="50"
+                             Height="40"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             Foreground="White"
+                             FontSize="18"
+                             Click="MinimizeButton_Click" />
+
+                <dx:SimpleButton Grid.Column="2"
+                             Content="✕"
+                             Width="50"
+                             Height="40"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             Foreground="White"
+                             FontSize="16"
+                             Click="ExitButton_Click" />
 
             </Grid>
 
         </Border>
 
-        <!-- Uygulama Alanı -->
+        <!-- Ortak Çalışma Alanı -->
 
-        <Grid Grid.Row="1">
+        <Border Grid.Row="1"
+            Background="White"
+            BorderBrush="#E5E7EB"
+            BorderThickness="0,0,0,1">
+
+            <Grid Margin="20,0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="280" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="280" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                       Text="Çalışma Alanı"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Foreground="#1F2937" />
+
+                <TextBlock Grid.Column="1"
+                       Text="Firma"
+                       VerticalAlignment="Center"
+                       Margin="20,0,10,0"
+                       Foreground="#4B5563"
+                       FontWeight="SemiBold" />
+
+                <dxe:ComboBoxEdit x:Name="CompanyComboBoxEdit"
+                              Grid.Column="2"
+                              Width="280"
+                              Height="36"
+                              VerticalAlignment="Center"
+                              NullText="Firma seçiniz..."
+                              IsTextEditable="False"
+                              IncrementalFiltering="True"
+                              DisplayMember="Name"
+                              EditValueChanged="CompanyComboBoxEdit_EditValueChanged" />
+
+                <TextBlock Grid.Column="3"
+                       Text="Dönem"
+                       VerticalAlignment="Center"
+                       Foreground="#4B5563"
+                       FontWeight="SemiBold" />
+
+                <dxe:ComboBoxEdit x:Name="PeriodComboBoxEdit"
+                              Grid.Column="4"
+                              Width="280"
+                              Height="36"
+                              VerticalAlignment="Center"
+                              NullText="Dönem seçiniz..."
+                              IsTextEditable="False"
+                              IncrementalFiltering="True"
+                              DisplayMember="DisplayText"
+                              EditValueChanged="PeriodComboBoxEdit_EditValueChanged" />
+
+            </Grid>
+
+        </Border>
+
+        <!-- Ana Uygulama Alanı -->
+
+        <Grid Grid.Row="2">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="240" />
+                <ColumnDefinition Width="250" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <!-- Sol Menü -->
 
             <Border Grid.Column="0"
-                    Background="#1F2937">
+                Background="#1F2937">
 
                 <Grid>
 
@@ -71,37 +147,122 @@
                         <RowDefinition Height="60" />
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0"
-                                Margin="10,20">
+                    <ScrollViewer Grid.Row="0"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
 
-                        <dx:SimpleButton Content="Ana Sayfa"
-                                         Style="{StaticResource MenuButtonStyle}" />
+                        <StackPanel Margin="10,20">
 
-                        <dx:SimpleButton Content="Firmalar"
+                            <!-- Ana Sayfa -->
+
+                            <dx:SimpleButton Content="Ana Sayfa"
                                          Style="{StaticResource MenuButtonStyle}"
-                                         Click="CompaniesButton_Click" />
+                                         Click="HomeButton_Click" />
 
-                        <dx:SimpleButton Content="Ürünler"
-                                         Style="{StaticResource MenuButtonStyle}" />
+                            <!-- Ticari -->
 
-                        <dx:SimpleButton Content="Cari"
-                                         Style="{StaticResource MenuButtonStyle}" />
+                            <dx:SimpleButton Content="Ticari"
+                                         Style="{StaticResource MenuButtonStyle}"
+                                         Click="CommercialButton_Click" />
 
-                        <dx:SimpleButton Content="Muhasebe"
-                                         Style="{StaticResource MenuButtonStyle}" />
+                            <StackPanel x:Name="CommercialSubMenu"
+                                    Visibility="Collapsed"
+                                    Margin="15,0,0,5">
 
-                    </StackPanel>
+                                <dx:SimpleButton Content="Firmalar"
+                                             Style="{StaticResource MenuButtonStyle}"
+                                             Click="CompaniesButton_Click" />
 
-                        <dx:SimpleButton Grid.Row="1"
-                                        Content="Çıkış"
-                                        Height="40"
-                                        Margin="10,5"
-                                        Glyph="{dx:DXImage Image=Close_16x16.png}"
-                                        GlyphHeight="16"
-                                        GlyphWidth="16"
-                                        GlyphAlignment="Left"
-                                        CornerRadius="4"
-                                        Click="ExitButton_Click" />
+                                <dx:SimpleButton Content="Ürünler"
+                                             Style="{StaticResource MenuButtonStyle}"
+                                             Click="ProductsButton_Click" />
+
+                                <dx:SimpleButton Content="Tedarikçiler"
+                                             Style="{StaticResource MenuButtonStyle}"
+                                             Click="SuppliersButton_Click" />
+
+                                <dx:SimpleButton Content="Satın Alma"
+                                             Style="{StaticResource MenuButtonStyle}"
+                                             Click="PurchasingButton_Click" />
+
+                                <dx:SimpleButton Content="Depolar"
+                                             Style="{StaticResource MenuButtonStyle}"
+                                             Click="WarehousesButton_Click" />
+
+                            </StackPanel>
+
+                            <!-- Cari -->
+
+                            <dx:SimpleButton Content="Cari"
+                                         Style="{StaticResource MenuButtonStyle}"
+                                         Click="CurrentAccountButton_Click" />
+
+                            <StackPanel x:Name="CurrentAccountSubMenu"
+                                    Visibility="Collapsed"
+                                    Margin="15,0,0,5">
+
+                                <dx:SimpleButton Content="Cari Kartlar"
+                                             Style="{StaticResource MenuButtonStyle}"
+                                             Click="CurrentCardsButton_Click" />
+
+                                <dx:SimpleButton Content="Cari Hareketler"
+                                             Style="{StaticResource MenuButtonStyle}"
+                                             Click="CurrentTransactionsButton_Click" />
+
+                            </StackPanel>
+
+                            <!-- Muhasebe -->
+
+                            <dx:SimpleButton Content="Muhasebe"
+                                         Style="{StaticResource MenuButtonStyle}"
+                                         Click="AccountingButton_Click" />
+
+                            <StackPanel x:Name="AccountingSubMenu"
+                                    Visibility="Collapsed"
+                                    Margin="15,0,0,5">
+
+                                <dx:SimpleButton Content="Hesap Planı"
+                                             Style="{StaticResource MenuButtonStyle}"
+                                             Click="AccountPlanButton_Click" />
+
+                                <dx:SimpleButton Content="Fişler"
+                                             Style="{StaticResource MenuButtonStyle}"
+                                             Click="VouchersButton_Click" />
+
+                                <dx:SimpleButton Content="Raporlar"
+                                             Style="{StaticResource MenuButtonStyle}"
+                                             Click="ReportsButton_Click" />
+
+                            </StackPanel>
+
+                            <!-- CRM -->
+
+                            <dx:SimpleButton Content="CRM"
+                                         Style="{StaticResource MenuButtonStyle}"
+                                         Click="CrmButton_Click" />
+
+                            <!-- İnsan Kaynakları -->
+
+                            <dx:SimpleButton Content="İnsan Kaynakları"
+                                         Style="{StaticResource MenuButtonStyle}"
+                                         Click="HumanResourcesButton_Click" />
+
+                        </StackPanel>
+
+                    </ScrollViewer>
+
+                    <!-- Çıkış -->
+
+                    <dx:SimpleButton Grid.Row="1"
+                                 Content="Çıkış"
+                                 Height="40"
+                                 Margin="10,5"
+                                 Glyph="{dx:DXImage Image=Close_16x16.png}"
+                                 GlyphHeight="16"
+                                 GlyphWidth="16"
+                                 GlyphAlignment="Left"
+                                 CornerRadius="4"
+                                 Click="ExitButton_Click" />
 
                 </Grid>
 
@@ -110,14 +271,55 @@
             <!-- İçerik -->
 
             <Grid Grid.Column="1"
-                  Background="#F5F6F8">
+              Background="#F5F6F8">
 
                 <ContentControl x:Name="ContentArea" />
+
+                <!-- Ana Sayfa -->
+
+                <Grid x:Name="HomeContent"
+                  Background="#F5F6F8"
+                  Visibility="Collapsed">
+
+                    <Border Margin="40"
+                        Background="White"
+                        CornerRadius="8"
+                        BorderBrush="#E5E7EB"
+                        BorderThickness="1">
+
+                        <StackPanel VerticalAlignment="Center"
+                                HorizontalAlignment="Center">
+
+                            <TextBlock Text="CoreFusion"
+                                   FontSize="28"
+                                   FontWeight="Bold"
+                                   Foreground="#1F2937"
+                                   HorizontalAlignment="Center" />
+
+                            <TextBlock Text="Hoş Geldiniz"
+                                   FontSize="18"
+                                   Foreground="#4B5563"
+                                   Margin="0,10,0,20"
+                                   HorizontalAlignment="Center" />
+
+                            <TextBlock x:Name="HomeContextText"
+                                   Text="Lütfen firma ve dönem seçiniz."
+                                   FontSize="15"
+                                   Foreground="#6B7280"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   MaxWidth="700"
+                                   HorizontalAlignment="Center" />
+
+                        </StackPanel>
+
+                    </Border>
+
+                </Grid>
 
             </Grid>
 
         </Grid>
 
     </Grid>
-
 </Window>
