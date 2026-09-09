@@ -267,45 +267,47 @@
             <!-- İçerik -->
 
             <Grid Grid.Column="1"
-                  Background="#F5F6F8">
+                  Background="#F3F0F7">
 
                 <ContentControl x:Name="ContentArea" />
 
                 <!-- Ana Sayfa -->
 
                 <Grid x:Name="HomeContent"
-                      Background="#F5F6F8"
+                      Background="#F3F0F7"
                       Visibility="Collapsed">
 
                     <Border Margin="40"
-                            Background="White"
+                            Background="#FAF7FC"
                             CornerRadius="8"
-                            BorderBrush="#E5E7EB"
+                            BorderBrush="#E5D9EA"
                             BorderThickness="1">
 
                         <StackPanel VerticalAlignment="Center"
-                                    HorizontalAlignment="Center">
+                        HorizontalAlignment="Center">
 
                             <TextBlock Text="CoreFusion"
-                                       FontSize="28"
-                                       FontWeight="Bold"
-                                       Foreground="#1F2937"
-                                       HorizontalAlignment="Center" />
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="#1F2937"
+                           HorizontalAlignment="Center" />
 
                             <TextBlock Text="Hoş Geldiniz"
-                                       FontSize="18"
-                                       Foreground="#4B5563"
-                                       Margin="0,10,0,20"
-                                       HorizontalAlignment="Center" />
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="#1F2937"
+                           Margin="0,10,0,20"
+                           HorizontalAlignment="Center" />
 
                             <TextBlock x:Name="HomeContextText"
-                                       Text="Lütfen firma ve dönem seçiniz."
-                                       FontSize="15"
-                                       Foreground="#6B7280"
-                                       TextAlignment="Center"
-                                       TextWrapping="Wrap"
-                                       MaxWidth="700"
-                                       HorizontalAlignment="Center" />
+                           Text="Lütfen firma ve dönem seçiniz."
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Foreground="#9B1C5A"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           MaxWidth="700"
+                           HorizontalAlignment="Center" />
 
                         </StackPanel>
 
@@ -314,7 +316,6 @@
                 </Grid>
 
             </Grid>
-
         </Grid>
 
     </Grid>
