@@ -2,7 +2,7 @@
 
 namespace Abstractions.Application.Services.Api;
 
-public interface IMasterApiClient
+public interface IMasterApiClient : IApiClient
 {
     #region Methods
 

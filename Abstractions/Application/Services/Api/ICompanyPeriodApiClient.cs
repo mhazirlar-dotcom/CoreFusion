@@ -3,7 +3,7 @@ using Abstractions.Core.Results;
 
 namespace Abstractions.Application.Services.Api;
 
-public interface ICompanyPeriodApiClient
+public interface ICompanyPeriodApiClient : IApiClient
 {
     #region Methods
 

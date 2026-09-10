@@ -3,8 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using Wpf.ApplicationForms;
-using Wpf.DependencyInjection;
-
 
 namespace Wpf;
 
@@ -30,10 +28,12 @@ public partial class App : System.Windows.Application
         ServiceCollection services = new();
 
         services.AddSingleton<IConfiguration>(configuration);
-
         services.AddCoreFusion();
-        services.AddCoreFusionAssembly(typeof(App).Assembly);
-        services.AddWpfServices(configuration);
+
+        string apiBaseUrl = configuration["ApiSettings:BaseUrl"]
+            ?? throw new InvalidOperationException("ApiSettings:BaseUrl bulunamadı.");
+
+        services.AddCoreFusionAssembly(typeof(App).Assembly , apiBaseUrl);
 
         _serviceProvider = services.BuildServiceProvider();
 
