@@ -45,7 +45,7 @@ public static class InfrastructureServiceCollectionExtensions
             };
 
             DbContextOptions<CoreFusionDbContext> options = new DbContextOptionsBuilder<CoreFusionDbContext>()
-                .UseSqlServer(connectionStringBuilder.ConnectionString, sqlOptions =>
+                .UseSqlServer(connectionStringBuilder.ConnectionString , sqlOptions =>
                 {
                     sqlOptions.MigrationsAssembly(typeof(CoreFusionDbContext).Assembly.FullName);
                 })

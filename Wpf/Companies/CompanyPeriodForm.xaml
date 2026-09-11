@@ -1,0 +1,155 @@
+﻿<UserControl x:Class="Wpf.Companies.CompanyPeriodForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="CompanyNameTextBlock"
+                   Grid.Row="0"
+                   FontSize="18"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,10"
+                   Text="Firma Dönemleri" />
+
+        <Border x:Name="EditPanel"
+                Grid.Row="1"
+                Padding="12"
+                Margin="0,0,0,10"
+                BorderThickness="1"
+                BorderBrush="#E5E7EB"
+                Background="White"
+                Visibility="Collapsed">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Text="Başlangıç Tarihi" />
+
+                <dxe:DateEdit x:Name="StartDateEdit"
+                              Grid.Column="1"
+                              Height="32"
+                              Mask="dd.MM.yyyy"
+                              MaskType="DateTime"
+                              MaskUseAsDisplayFormat="True"
+                              HorizontalContentAlignment="Left"
+                              VerticalContentAlignment="Center"
+                              ShowToday="True"
+                              ShowClearButton="False" />
+
+                <TextBlock Grid.Column="2"
+                           VerticalAlignment="Center"
+                           Margin="20,0,0,0"
+                           Text="Bitiş Tarihi" />
+
+                <dxe:DateEdit x:Name="EndDateEdit"
+                              Grid.Column="3"
+                              Height="32"
+                              Mask="dd.MM.yyyy"
+                              MaskType="DateTime"
+                              MaskUseAsDisplayFormat="True"
+                              HorizontalContentAlignment="Left"
+                              VerticalContentAlignment="Center"
+                              ShowToday="True"
+                              ShowClearButton="False" />
+
+                <StackPanel Grid.Column="4"
+                            Orientation="Horizontal"
+                            Margin="20,0,0,0">
+                    <dx:SimpleButton Content="Kaydet"
+                                     Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Check.svg'}"
+                                     GlyphHeight="16"
+                                     GlyphWidth="16"
+                                     Style="{StaticResource GridActionButtonStyle}"
+                                     Click="SaveButton_Click" />
+
+                    <dx:SimpleButton Content="Vazgeç"
+                                     Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Close.svg'}"
+                                     GlyphHeight="16"
+                                     GlyphWidth="16"
+                                     Style="{StaticResource GridActionButtonStyle}"
+                                     Click="CancelButton_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <dxg:GridControl x:Name="PeriodsGridControl"
+                         Grid.Row="2"
+                         SelectionMode="Row">
+            <dxg:GridControl.View>
+                <dxg:TableView AllowEditing="False"
+                               AllowGrouping="False"
+                               AllowSorting="True"
+                               NavigationStyle="Row"
+                               ShowAutoFilterRow="False"
+                               ShowGroupPanel="False"
+                               Style="{StaticResource ReadOnlyTableViewStyle}" ShowCriteriaInAutoFilterRow="False" />
+            </dxg:GridControl.View>
+
+            <dxg:GridControl.Columns>
+                <dxg:GridColumn FieldName="StartDate"
+                                Header="Başlangıç"
+                                Width="200"
+                                HorizontalHeaderContentAlignment="Center" />
+
+                <dxg:GridColumn FieldName="EndDate"
+                                Header="Bitiş"
+                                Width="200"
+                                HorizontalHeaderContentAlignment="Center" />
+
+                <dxg:GridColumn FieldName="IsActive"
+                                Header="Aktif"
+                                Width="100"
+                                HorizontalHeaderContentAlignment="Center" />
+            </dxg:GridControl.Columns>
+        </dxg:GridControl>
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,8,0,0">
+            <dx:SimpleButton Content="Yeni"
+                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Add.svg'}"
+                             GlyphHeight="16"
+                             GlyphWidth="16"
+                             Style="{StaticResource GridActionButtonStyle}"
+                             Click="NewButton_Click" />
+
+            <dx:SimpleButton Content="Düzenle"
+                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Edit.svg'}"
+                             GlyphHeight="16"
+                             GlyphWidth="16"
+                             Style="{StaticResource GridActionButtonStyle}"
+                             Click="EditButton_Click" />
+
+            <dx:SimpleButton Content="Sil"
+                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Delete.svg'}"
+                             GlyphHeight="16"
+                             GlyphWidth="16"
+                             Style="{StaticResource GridActionButtonStyle}"
+                             Click="DeleteButton_Click" />
+
+            <dx:SimpleButton Content="Yenile"
+                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Refresh.svg'}"
+                             GlyphHeight="16"
+                             GlyphWidth="16"
+                             Style="{StaticResource GridActionButtonStyle}"
+                             Margin="0"
+                             Click="RefreshButton_Click" />
+        </StackPanel>
+    </Grid>
+</UserControl>

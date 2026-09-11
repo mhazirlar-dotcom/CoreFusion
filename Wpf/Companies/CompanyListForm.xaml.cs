@@ -22,6 +22,7 @@ public partial class CompanyListForm : UserControl, ITransientService
 
     public event EventHandler? NewCompanyRequested;
     public event EventHandler<CompanyModel>? EditCompanyRequested;
+    public event EventHandler<CompanyModel>? PeriodsRequested;
 
     #endregion Events
 
@@ -73,6 +74,22 @@ public partial class CompanyListForm : UserControl, ITransientService
         }
 
         EditCompanyRequested?.Invoke(this , selectedCompany);
+    }
+
+    private void PeriodsButton_Click(object sender , RoutedEventArgs e)
+    {
+        if (CompaniesGridControl.SelectedItem is not CompanyModel selectedCompany)
+        {
+            MessageBox.Show(
+                "Lütfen dönemlerini yönetmek istediğiniz firmayı seçin." ,
+                "Dönemler" ,
+                MessageBoxButton.OK ,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        PeriodsRequested?.Invoke(this , selectedCompany);
     }
 
     private async void DeleteButton_Click(object sender , RoutedEventArgs e)

@@ -25,6 +25,7 @@ public partial class MainWindow : Window, ITransientService
     private readonly WorkingContext _workingContext;
     private readonly CompanyListForm _companyListForm;
     private readonly CompanyForm _companyForm;
+    private readonly CompanyPeriodForm _companyPeriodForm;
     private readonly ObservableCollection<PeriodSelectionItem> _periods = [];
     private bool _isInitializing;
 
@@ -32,7 +33,7 @@ public partial class MainWindow : Window, ITransientService
 
     #region Constructors
 
-    public MainWindow(ICompanyApiClient companyApiClient , ICompanyPeriodApiClient companyPeriodApiClient , CompanyState companyState , WorkingContext workingContext , CompanyListForm companyListForm , CompanyForm companyForm)
+    public MainWindow(ICompanyApiClient companyApiClient , ICompanyPeriodApiClient companyPeriodApiClient , CompanyState companyState , WorkingContext workingContext , CompanyListForm companyListForm , CompanyForm companyForm , CompanyPeriodForm companyPeriodForm)
     {
         ArgumentNullException.ThrowIfNull(companyApiClient);
         ArgumentNullException.ThrowIfNull(companyPeriodApiClient);
@@ -40,6 +41,7 @@ public partial class MainWindow : Window, ITransientService
         ArgumentNullException.ThrowIfNull(workingContext);
         ArgumentNullException.ThrowIfNull(companyListForm);
         ArgumentNullException.ThrowIfNull(companyForm);
+        ArgumentNullException.ThrowIfNull(companyPeriodForm);
 
         _companyApiClient = companyApiClient;
         _companyPeriodApiClient = companyPeriodApiClient;
@@ -47,6 +49,7 @@ public partial class MainWindow : Window, ITransientService
         _workingContext = workingContext;
         _companyListForm = companyListForm;
         _companyForm = companyForm;
+        _companyPeriodForm = companyPeriodForm;
 
         InitializeComponent();
 
@@ -54,9 +57,9 @@ public partial class MainWindow : Window, ITransientService
         PeriodComboBoxEdit.ItemsSource = _periods;
 
         _workingContext.ContextChanged += WorkingContext_ContextChanged;
-
         _companyListForm.NewCompanyRequested += CompanyListForm_NewCompanyRequested;
         _companyListForm.EditCompanyRequested += CompanyListForm_EditCompanyRequested;
+        _companyListForm.PeriodsRequested += CompanyListForm_PeriodsRequested;
     }
 
     #endregion Constructors
@@ -75,7 +78,7 @@ public partial class MainWindow : Window, ITransientService
             return;
         }
 
-        CompanyModel? company = e.NewValue as CompanyModel;
+        CompanyModel? company = (CompanyModel)e.NewValue;
 
         if (company is null)
         {
@@ -95,7 +98,7 @@ public partial class MainWindow : Window, ITransientService
             return;
         }
 
-        PeriodSelectionItem? selectedPeriod = e.NewValue as PeriodSelectionItem;
+        PeriodSelectionItem? selectedPeriod = (PeriodSelectionItem)e.NewValue;
 
         if (selectedPeriod is null)
         {
@@ -206,6 +209,15 @@ public partial class MainWindow : Window, ITransientService
         await _companyForm.LoadCompanyAsync(company.Id);
     }
 
+    private async void CompanyListForm_PeriodsRequested(object? sender , CompanyModel company)
+    {
+        ArgumentNullException.ThrowIfNull(company);
+
+        ContentArea.Content = _companyPeriodForm;
+
+        await _companyPeriodForm.LoadCompanyAsync(company.Id);
+    }
+
     private void MinimizeButton_Click(object sender , RoutedEventArgs e)
     {
         WindowState = WindowState.Minimized;
@@ -260,7 +272,6 @@ public partial class MainWindow : Window, ITransientService
             _workingContext.SetCompany(activeCompany);
 
             await LoadPeriodsAsync(activeCompany.Id);
-
             ShowHome();
         }
         catch (Exception exception)
@@ -281,7 +292,8 @@ public partial class MainWindow : Window, ITransientService
     {
         try
         {
-            IDataResult<List<CompanyPeriodModel>> result = await _companyPeriodApiClient.GetByCompanyIdAsync(companyId);
+            IDataResult<List<CompanyPeriodModel>> result =
+                await _companyPeriodApiClient.GetByCompanyIdAsync(companyId);
 
             _periods.Clear();
 
@@ -306,7 +318,6 @@ public partial class MainWindow : Window, ITransientService
             }
 
             PeriodSelectionItem? selectedPeriod = GetDefaultPeriod(_periods);
-
             PeriodComboBoxEdit.EditValue = selectedPeriod;
 
             if (selectedPeriod is not null)
@@ -328,10 +339,12 @@ public partial class MainWindow : Window, ITransientService
     {
         DateOnly today = DateOnly.FromDateTime(DateTime.Today);
 
-        List<PeriodSelectionItem> periodList = periods.ToList();
+        List<PeriodSelectionItem> periodList = [.. periods];
 
         PeriodSelectionItem? currentPeriod = periodList.FirstOrDefault(
-            item => item.Period.StartDate <= today && item.Period.EndDate >= today);
+            item =>
+                item.Period.StartDate <= today &&
+                item.Period.EndDate >= today);
 
         if (currentPeriod is not null)
         {
@@ -431,6 +444,7 @@ public partial class MainWindow : Window, ITransientService
         if (company is null)
         {
             HomeContextText.Text = "Lütfen firma seçiniz.";
+
             return;
         }
 
