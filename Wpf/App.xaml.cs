@@ -1,8 +1,12 @@
 ﻿using Core.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Options;
+using System.Net.Http;
 using System.Windows;
 using Wpf.ApplicationForms;
+using Wpf.Http;
 
 namespace Wpf;
 
@@ -34,6 +38,17 @@ public partial class App : System.Windows.Application
             ?? throw new InvalidOperationException("ApiSettings:BaseUrl bulunamadı.");
 
         services.AddCoreFusionAssembly(typeof(App).Assembly , apiBaseUrl);
+
+        services.AddTransient<ActiveCompanyDelegatingHandler>();
+
+        services.Configure<HttpClientFactoryOptions>(Options.DefaultName , options =>
+        {
+            options.HttpMessageHandlerBuilderActions.Add(builder =>
+            {
+                ActiveCompanyDelegatingHandler handler = builder.Services.GetRequiredService<ActiveCompanyDelegatingHandler>();
+                builder.AdditionalHandlers.Add(handler);
+            });
+        });
 
         _serviceProvider = services.BuildServiceProvider();
 

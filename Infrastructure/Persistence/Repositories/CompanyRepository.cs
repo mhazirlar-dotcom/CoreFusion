@@ -1,4 +1,5 @@
-﻿using Abstractions.Domain;
+﻿using Abstractions.Core.DependencyInjection;
+using Abstractions.Domain;
 using Abstractions.Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Persistence.Repositories;
 
-public class CompanyRepository<TEntity, TKey>(CoreFusionDbContext context) : ICompanyRepository<TEntity , TKey> where TEntity : class, IEntity<TKey> where TKey : notnull
+public class CompanyRepository<TEntity, TKey>(CoreFusionDbContext context) : ICompanyRepository<TEntity , TKey>, IScopedService where TEntity : class, IEntity<TKey> where TKey : notnull
 {
     #region Fields
 
@@ -32,7 +33,9 @@ public class CompanyRepository<TEntity, TKey>(CoreFusionDbContext context) : ICo
     {
         ArgumentNullException.ThrowIfNull(filter);
 
-        TEntity? entity = await _context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(filter, cancellationToken);
+        TEntity? entity = await _context.Set<TEntity>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(filter, cancellationToken);
 
         return entity ?? throw new KeyNotFoundException($"{typeof(TEntity).Name} bulunamadı.");
     }
@@ -42,7 +45,6 @@ public class CompanyRepository<TEntity, TKey>(CoreFusionDbContext context) : ICo
         ArgumentNullException.ThrowIfNull(entity);
 
         await _context.Set<TEntity>().AddAsync(entity , cancellationToken);
-
         await _context.SaveChangesAsync(cancellationToken);
     }
 
@@ -51,7 +53,6 @@ public class CompanyRepository<TEntity, TKey>(CoreFusionDbContext context) : ICo
         ArgumentNullException.ThrowIfNull(entity);
 
         _context.Set<TEntity>().Update(entity);
-
         await _context.SaveChangesAsync(cancellationToken);
     }
 
@@ -60,7 +61,6 @@ public class CompanyRepository<TEntity, TKey>(CoreFusionDbContext context) : ICo
         ArgumentNullException.ThrowIfNull(entity);
 
         _context.Set<TEntity>().Remove(entity);
-
         await _context.SaveChangesAsync(cancellationToken);
     }
 

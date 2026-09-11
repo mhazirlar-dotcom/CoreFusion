@@ -2,6 +2,7 @@ using Abstractions.Persistence;
 using Core.DependencyInjection;
 using Infrastructure.DependencyInjection;
 using WebApi.Exceptions;
+using WebApi.Middleware;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<CompanyContextMiddleware>();
+
 app.UseAuthorization();
 
 #endregion Middleware
