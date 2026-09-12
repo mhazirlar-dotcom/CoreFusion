@@ -4,7 +4,6 @@ using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations.Master
 {
     [DbContext(typeof(CoreFusionMasterDbContext))]
-    [Migration("20260909151748_AddCompanyPeriods")]
-    partial class AddCompanyPeriods
+    partial class CoreFusionMasterDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,10 +27,16 @@ namespace Infrastructure.Persistence.Migrations.Master
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateOnly?>("ClosingDate")
+                        .HasColumnType("date");
+
                     b.Property<string>("DatabaseName")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateOnly>("EstablishmentDate")
+                        .HasColumnType("date");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -65,6 +68,11 @@ namespace Infrastructure.Persistence.Migrations.Master
 
                     b.Property<Guid>("TaxOfficeId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TcIdentityNumber")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<string>("TradeRegistryNumber")
                         .IsRequired()

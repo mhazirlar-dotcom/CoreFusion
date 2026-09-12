@@ -13,7 +13,13 @@ public class Company : Entity<Guid>
 
     public string TaxNumber { get; set; } = string.Empty;
 
+    public string TcIdentityNumber { get; set; } = string.Empty;
+
     public Guid TaxOfficeId { get; set; }
+
+    public DateOnly EstablishmentDate { get; set; }
+
+    public DateOnly? ClosingDate { get; set; }
 
     public string TradeRegistryNumber { get; set; } = string.Empty;
 

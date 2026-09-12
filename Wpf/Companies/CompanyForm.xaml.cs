@@ -228,6 +228,36 @@ public partial class CompanyForm : UserControl, ITransientService
                 return;
             }
 
+            if (EstablishmentDateEdit.EditValue is not DateTime establishmentDateTime)
+            {
+                MessageBox.Show(
+                    "Lütfen kuruluş tarihi girin." ,
+                    "Firma" ,
+                    MessageBoxButton.OK ,
+                    MessageBoxImage.Warning);
+
+                return;
+            }
+
+            DateOnly establishmentDate = DateOnly.FromDateTime(establishmentDateTime);
+            DateOnly? closingDate = null;
+
+            if (ClosingDateEdit.EditValue is DateTime closingDateTime)
+            {
+                closingDate = DateOnly.FromDateTime(closingDateTime);
+            }
+
+            if (closingDate.HasValue && closingDate.Value < establishmentDate)
+            {
+                MessageBox.Show(
+                    "Kapanış tarihi kuruluş tarihinden önce olamaz." ,
+                    "Firma" ,
+                    MessageBoxButton.OK ,
+                    MessageBoxImage.Warning);
+
+                return;
+            }
+
             Guid taxOfficeId = selectedTaxOffice.Id;
 
             if (_companyId is not null)
@@ -237,7 +267,10 @@ public partial class CompanyForm : UserControl, ITransientService
                     CompanyNameTextEdit.Text,
                     ShortNameTextEdit.Text,
                     TaxNumberTextEdit.Text,
+                    TcIdentityNumberTextEdit.Text,
                     taxOfficeId,
+                    establishmentDate,
+                    closingDate,
                     TradeRegistryNumberTextEdit.Text,
                     MersisNumberTextEdit.Text,
                     WebsiteTextEdit.Text);
@@ -283,7 +316,10 @@ public partial class CompanyForm : UserControl, ITransientService
                 CompanyNameTextEdit.Text,
                 ShortNameTextEdit.Text,
                 TaxNumberTextEdit.Text,
+                TcIdentityNumberTextEdit.Text,
                 taxOfficeId,
+                establishmentDate,
+                closingDate,
                 TradeRegistryNumberTextEdit.Text,
                 MersisNumberTextEdit.Text,
                 WebsiteTextEdit.Text,
@@ -378,9 +414,16 @@ public partial class CompanyForm : UserControl, ITransientService
             CompanyModel company = result.Data;
 
             _companyId = company.Id;
+
             CompanyNameTextEdit.Text = company.Name;
             ShortNameTextEdit.Text = company.ShortName;
             TaxNumberTextEdit.Text = company.TaxNumber;
+            TcIdentityNumberTextEdit.Text = company.TcIdentityNumber;
+
+            EstablishmentDateEdit.EditValue = company.EstablishmentDate.ToDateTime(TimeOnly.MinValue);
+
+            ClosingDateEdit.EditValue = company.ClosingDate?.ToDateTime(TimeOnly.MinValue);
+
             TradeRegistryNumberTextEdit.Text = company.TradeRegistryNumber;
             MersisNumberTextEdit.Text = company.MersisNumber;
             WebsiteTextEdit.Text = company.Website;
@@ -407,6 +450,11 @@ public partial class CompanyForm : UserControl, ITransientService
         CompanyNameTextEdit.Clear();
         ShortNameTextEdit.Clear();
         TaxNumberTextEdit.Clear();
+        TcIdentityNumberTextEdit.Clear();
+
+        EstablishmentDateEdit.EditValue = null;
+        ClosingDateEdit.EditValue = null;
+
         TradeRegistryNumberTextEdit.Clear();
         MersisNumberTextEdit.Clear();
         WebsiteTextEdit.Clear();

@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Infrastructure.Migrations.CoreFusionDb
+namespace Infrastructure.Persistence.Migrations.Company
 {
     /// <inheritdoc />
-    public partial class InitialCompany : Migration
+    public partial class InitialCompanyDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

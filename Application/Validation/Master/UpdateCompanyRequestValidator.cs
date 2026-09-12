@@ -25,8 +25,18 @@ public class UpdateCompanyRequestValidator : AbstractValidator<UpdateCompanyRequ
             .NotEmpty()
             .MaximumLength(20);
 
+        RuleFor(request => request.TcIdentityNumber)
+            .MaximumLength(11);
+
         RuleFor(request => request.TaxOfficeId)
             .NotEmpty();
+
+        RuleFor(request => request.EstablishmentDate)
+            .NotEmpty();
+
+        RuleFor(request => request.ClosingDate)
+            .GreaterThanOrEqualTo(request => request.EstablishmentDate)
+            .When(request => request.ClosingDate.HasValue);
 
         RuleFor(request => request.TradeRegistryNumber)
             .MaximumLength(50);

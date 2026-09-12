@@ -51,7 +51,10 @@ public class CompanyService(IMasterRepository<Company , Guid> companyRepository 
             Name = request.Name,
             ShortName = request.ShortName,
             TaxNumber = request.TaxNumber,
+            TcIdentityNumber = request.TcIdentityNumber,
             TaxOfficeId = request.TaxOfficeId,
+            EstablishmentDate = request.EstablishmentDate,
+            ClosingDate = request.ClosingDate,
             TradeRegistryNumber = request.TradeRegistryNumber,
             MersisNumber = request.MersisNumber,
             Website = request.Website,
@@ -114,18 +117,25 @@ public class CompanyService(IMasterRepository<Company , Guid> companyRepository 
 
     public async Task<IDataResult<List<CompanyModel>>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        List<Company> companies = await _companyRepository.GetAllAsync(company => company.IsActive, cancellationToken);
+        List<Company> companies = await _companyRepository.GetAllAsync(company => company.IsActive , cancellationToken);
+        List<TaxOffice> taxOffices = await _taxOfficeRepository.GetAllAsync(taxOffice => taxOffice.IsActive , cancellationToken);
 
-        List<CompanyModel> result = [.. companies.Select(MapToModel)];
+        Dictionary<Guid, string> taxOfficeNames = taxOffices.ToDictionary(taxOffice => taxOffice.Id , taxOffice => taxOffice.Name);
+
+        List<CompanyModel> result = [.. companies.Select(company => MapToModel(company , taxOfficeNames))];
 
         return new DataResult<List<CompanyModel>>(result , true);
     }
 
     public async Task<IDataResult<CompanyModel>> GetByIdAsync(Guid id , CancellationToken cancellationToken = default)
     {
-        Company company = await _companyRepository.GetAsync(company => company.Id == id && company.IsActive, cancellationToken);
+        Company company = await _companyRepository.GetAsync(company => company.Id == id && company.IsActive , cancellationToken);
+        TaxOffice taxOffice = await _taxOfficeRepository.GetAsync(item => item.Id == company.TaxOfficeId , cancellationToken);
 
-        return new DataResult<CompanyModel>(MapToModel(company) , true);
+        return new DataResult<CompanyModel>(MapToModel(company , new Dictionary<Guid , string>
+        {
+            [taxOffice.Id] = taxOffice.Name
+        }) , true);
     }
 
     public async Task<IResult> UpdateAsync(UpdateCompanyRequest request , CancellationToken cancellationToken = default)
@@ -136,12 +146,15 @@ public class CompanyService(IMasterRepository<Company , Guid> companyRepository 
 
         await _taxOfficeRepository.GetAsync(taxOffice => taxOffice.Id == request.TaxOfficeId , cancellationToken);
 
-        Company company = await _companyRepository.GetAsync(item => item.Id == request.Id && item.IsActive, cancellationToken);
+        Company company = await _companyRepository.GetAsync(item => item.Id == request.Id && item.IsActive , cancellationToken);
 
         company.Name = request.Name;
         company.ShortName = request.ShortName;
         company.TaxNumber = request.TaxNumber;
+        company.TcIdentityNumber = request.TcIdentityNumber;
         company.TaxOfficeId = request.TaxOfficeId;
+        company.EstablishmentDate = request.EstablishmentDate;
+        company.ClosingDate = request.ClosingDate;
         company.TradeRegistryNumber = request.TradeRegistryNumber;
         company.MersisNumber = request.MersisNumber;
         company.Website = request.Website;
@@ -153,7 +166,7 @@ public class CompanyService(IMasterRepository<Company , Guid> companyRepository 
 
     public async Task<IResult> DeleteAsync(Guid id , CancellationToken cancellationToken = default)
     {
-        Company company = await _companyRepository.GetAsync(item => item.Id == id && item.IsActive, cancellationToken);
+        Company company = await _companyRepository.GetAsync(item => item.Id == id && item.IsActive , cancellationToken);
 
         company.IsActive = false;
 
@@ -168,8 +181,8 @@ public class CompanyService(IMasterRepository<Company , Guid> companyRepository 
 
         foreach (CreateCompanyAddressRequest address in request.Addresses)
         {
-            City city = await _cityRepository.GetAsync(item => item.Id == address.CityId, cancellationToken);
-            District district = await _districtRepository.GetAsync(item => item.Id == address.DistrictId, cancellationToken);
+            City city = await _cityRepository.GetAsync(item => item.Id == address.CityId , cancellationToken);
+            District district = await _districtRepository.GetAsync(item => item.Id == address.DistrictId , cancellationToken);
 
             if (district.CityId != city.Id)
             {
@@ -185,14 +198,22 @@ public class CompanyService(IMasterRepository<Company , Guid> companyRepository 
         }
     }
 
-    private static CompanyModel MapToModel(Company company)
+    private static CompanyModel MapToModel(Company company , IReadOnlyDictionary<Guid , string> taxOfficeNames)
     {
+        string taxOfficeName = taxOfficeNames.TryGetValue(company.TaxOfficeId , out string? name)
+            ? name
+            : string.Empty;
+
         return new CompanyModel(
             company.Id ,
             company.Name ,
             company.ShortName ,
             company.TaxNumber ,
+            company.TcIdentityNumber ,
             company.TaxOfficeId ,
+            taxOfficeName ,
+            company.EstablishmentDate ,
+            company.ClosingDate ,
             company.TradeRegistryNumber ,
             company.MersisNumber ,
             company.Website ,

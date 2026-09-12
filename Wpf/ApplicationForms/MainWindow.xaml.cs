@@ -6,6 +6,7 @@ using DevExpress.Xpf.Editors;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Wpf.Companies;
 using Wpf.State;
@@ -27,6 +28,7 @@ public partial class MainWindow : Window, ITransientService
     private readonly CompanyForm _companyForm;
     private readonly CompanyPeriodForm _companyPeriodForm;
     private readonly ObservableCollection<PeriodSelectionItem> _periods = [];
+    private readonly List<MenuVisual> _menuVisuals = [];
     private bool _isInitializing;
 
     #endregion Fields
@@ -61,6 +63,8 @@ public partial class MainWindow : Window, ITransientService
         _companyListForm.NewCompanyRequested += CompanyListForm_NewCompanyRequested;
         _companyListForm.EditCompanyRequested += CompanyListForm_EditCompanyRequested;
         _companyListForm.PeriodsRequested += CompanyListForm_PeriodsRequested;
+
+        BuildMenu();
     }
 
     #endregion Constructors
@@ -114,90 +118,10 @@ public partial class MainWindow : Window, ITransientService
         UpdateHomeContext();
     }
 
-    private void HomeButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowHome();
-    }
-
-    private void CommercialButton_Click(object sender , RoutedEventArgs e)
-    {
-        ToggleSubMenu(CommercialSubMenu);
-    }
-
-    private void CurrentAccountButton_Click(object sender , RoutedEventArgs e)
-    {
-        ToggleSubMenu(CurrentAccountSubMenu);
-    }
-
-    private void AccountingButton_Click(object sender , RoutedEventArgs e)
-    {
-        ToggleSubMenu(AccountingSubMenu);
-    }
-
-    private void CompaniesButton_Click(object sender , RoutedEventArgs e)
-    {
-        HideHome();
-        ContentArea.Content = _companyListForm;
-    }
-
-    private void ProductsButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowPlaceholder("Ürünler");
-    }
-
-    private void SuppliersButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowPlaceholder("Tedarikçiler");
-    }
-
-    private void PurchasingButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowPlaceholder("Satın Alma");
-    }
-
-    private void WarehousesButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowPlaceholder("Depolar");
-    }
-
-    private void CurrentCardsButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowPlaceholder("Cari Kartlar");
-    }
-
-    private void CurrentTransactionsButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowPlaceholder("Cari Hareketler");
-    }
-
-    private void AccountPlanButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowPlaceholder("Hesap Planı");
-    }
-
-    private void VouchersButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowPlaceholder("Fişler");
-    }
-
-    private void ReportsButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowPlaceholder("Raporlar");
-    }
-
-    private void CrmButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowPlaceholder("CRM");
-    }
-
-    private void HumanResourcesButton_Click(object sender , RoutedEventArgs e)
-    {
-        ShowPlaceholder("İnsan Kaynakları");
-    }
-
     private void CompanyListForm_NewCompanyRequested(object? sender , EventArgs e)
     {
         _companyForm.PrepareForNew();
+
         ContentArea.Content = _companyForm;
     }
 
@@ -216,9 +140,7 @@ public partial class MainWindow : Window, ITransientService
 
         ContentArea.Content = _companyPeriodForm;
 
-        await _companyPeriodForm.LoadCompanyAsync(
-            company.Id ,
-            company.Name);
+        await _companyPeriodForm.LoadCompanyAsync(company.Id , company.Name);
     }
 
     private void MinimizeButton_Click(object sender , RoutedEventArgs e)
@@ -243,6 +165,324 @@ public partial class MainWindow : Window, ITransientService
 
     #region Methods
 
+    private void BuildMenu()
+    {
+        MainMenuPanel.Children.Clear();
+        _menuVisuals.Clear();
+
+        List<MenuDefinition> menuDefinitions =
+        [
+            new MenuDefinition(
+                "Ana Sayfa",
+                ShowHome),
+
+            new MenuDefinition(
+                "Muhasebe",
+                children:
+                [
+                    new MenuDefinition(
+                        "Hesap Planı",
+                        () => ShowPlaceholder("Hesap Planı")),
+
+                    new MenuDefinition(
+                        "Fişler",
+                        () => ShowPlaceholder("Fişler")),
+
+                    new MenuDefinition(
+                        "Muhasebe Raporları",
+                        () => ShowPlaceholder("Muhasebe Raporları"))
+                ]),
+
+            new MenuDefinition(
+                "Ticari",
+                children:
+                [
+                    new MenuDefinition(
+                        "Cari",
+                        children:
+                        [
+                            new MenuDefinition(
+                                "Cari Kartlar",
+                                () => ShowPlaceholder("Cari Kartlar")),
+
+                            new MenuDefinition(
+                                "Cari Hareketler",
+                                () => ShowPlaceholder("Cari Hareketler"))
+                        ]),
+
+                    new MenuDefinition(
+                        "Ürünler",
+                        () => ShowPlaceholder("Ürünler")),
+
+                    new MenuDefinition(
+                        "Tedarikçiler",
+                        () => ShowPlaceholder("Tedarikçiler")),
+
+                    new MenuDefinition(
+                        "Satın Alma",
+                        () => ShowPlaceholder("Satın Alma")),
+
+                    new MenuDefinition(
+                        "Depolar",
+                        () => ShowPlaceholder("Depolar"))
+                ]),
+
+            new MenuDefinition(
+                "İnsan Kaynakları",
+                () => ShowPlaceholder("İnsan Kaynakları")),
+
+            new MenuDefinition(
+                "CRM",
+                () => ShowPlaceholder("CRM")),
+
+            new MenuDefinition(
+                "Yönetici",
+                children:
+                [
+                    new MenuDefinition(
+                        "Firma İşlemleri",
+                        children:
+                        [
+                            new MenuDefinition(
+                                "Firma Girişi",
+                                OpenNewCompanyForm),
+
+                            new MenuDefinition(
+                                "Firma Listesi",
+                                OpenCompanyListForm)
+                        ])
+                ]),
+
+            new MenuDefinition(
+                "Raporlar",
+                () => ShowPlaceholder("Raporlar"))
+        ];
+
+        foreach (MenuDefinition menuDefinition in menuDefinitions)
+        {
+            MenuVisual menuVisual = CreateMenuVisual(menuDefinition , null);
+
+            MainMenuPanel.Children.Add(menuVisual.Item);
+
+            _menuVisuals.Add(menuVisual);
+        }
+    }
+
+    private MenuVisual CreateMenuVisual(MenuDefinition definition , MenuVisual? parent)
+    {
+        Border item = new()
+        {
+            Style = (Style)FindResource("CascadingMenuItemStyle")
+        };
+
+        Grid content = new();
+
+        ColumnDefinition textColumn = new()
+        {
+            Width = new GridLength(1 , GridUnitType.Star)
+        };
+
+        ColumnDefinition arrowColumn = new()
+        {
+            Width = GridLength.Auto
+        };
+
+        content.ColumnDefinitions.Add(textColumn);
+        content.ColumnDefinitions.Add(arrowColumn);
+
+        TextBlock text = new()
+        {
+            Text = definition.Text,
+            Style = (Style)FindResource("CascadingMenuTextStyle")
+        };
+
+        Grid.SetColumn(text , 0);
+
+        content.Children.Add(text);
+
+        if (definition.HasChildren)
+        {
+            TextBlock arrow = new()
+            {
+                Text = "›",
+                Style = (Style)FindResource("CascadingMenuArrowStyle"),
+                Margin = new System.Windows.Thickness(12, 0, 0, 0)
+            };
+
+            Grid.SetColumn(arrow , 1);
+
+            content.Children.Add(arrow);
+        }
+
+        item.Child = content;
+
+        MenuVisual visual = new(definition , parent , item);
+
+        item.MouseLeftButtonUp += (_ , _) => MenuItem_Click(visual);
+
+        if (definition.HasChildren)
+        {
+            Popup popup = new()
+            {
+                PlacementTarget = item,
+                Placement = System.Windows.Controls.Primitives.PlacementMode.Right,
+                AllowsTransparency = true,
+                StaysOpen = true,
+                Focusable = false,
+                PopupAnimation = System.Windows.Controls.Primitives.PopupAnimation.Fade,
+                HorizontalOffset = 4
+            };
+
+            Border popupBorder = new()
+            {
+                Background = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(31, 41, 55)),
+
+                BorderBrush = new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(55, 65, 81)),
+
+                BorderThickness = new System.Windows.Thickness(1),
+
+                CornerRadius = new CornerRadius(4),
+
+                Padding = new System.Windows.Thickness(6),
+
+                Width = 220
+            };
+
+            StackPanel popupPanel = new();
+
+            popup.Child = popupBorder;
+            popupBorder.Child = popupPanel;
+
+            visual.Popup = popup;
+
+            foreach (MenuDefinition childDefinition in definition.Children)
+            {
+                MenuVisual childVisual = CreateMenuVisual(childDefinition , visual);
+
+                popupPanel.Children.Add(childVisual.Item);
+
+                visual.Children.Add(childVisual);
+
+                _menuVisuals.Add(childVisual);
+            }
+
+            item.MouseEnter += (_ , _) =>
+            {
+                if (visual.Parent is not null)
+                {
+                    CloseSiblingMenus(visual);
+                }
+            };
+        }
+
+        return visual;
+    }
+
+    private void MenuItem_Click(MenuVisual visual)
+    {
+        if (visual.Definition.HasChildren)
+        {
+            if (visual.Popup is null)
+            {
+                return;
+            }
+
+            if (visual.Popup.IsOpen)
+            {
+                CloseDescendants(visual);
+
+                visual.Popup.IsOpen = false;
+
+                return;
+            }
+
+            CloseSiblingMenus(visual);
+
+            visual.Popup.IsOpen = true;
+
+            return;
+        }
+
+        CloseAllMenus();
+
+        visual.Definition.Action?.Invoke();
+    }
+
+    private void CloseSiblingMenus(MenuVisual visual)
+    {
+        List<MenuVisual> siblings;
+
+        if (visual.Parent is null)
+        {
+            siblings = _menuVisuals
+                .Where(item => item.Parent is null && !ReferenceEquals(item , visual))
+                .ToList();
+        }
+        else
+        {
+            siblings = visual.Parent.Children
+                .Where(item => !ReferenceEquals(item , visual))
+                .ToList();
+        }
+
+        foreach (MenuVisual sibling in siblings)
+        {
+            CloseMenu(sibling);
+        }
+    }
+
+    private void CloseMenu(MenuVisual visual)
+    {
+        CloseDescendants(visual);
+
+        if (visual.Popup is not null)
+        {
+            visual.Popup.IsOpen = false;
+        }
+    }
+
+    private void CloseDescendants(MenuVisual visual)
+    {
+        foreach (MenuVisual child in visual.Children)
+        {
+            CloseDescendants(child);
+
+            if (child.Popup is not null)
+            {
+                child.Popup.IsOpen = false;
+            }
+        }
+    }
+
+    private void CloseAllMenus()
+    {
+        foreach (MenuVisual visual in _menuVisuals)
+        {
+            if (visual.Popup is not null)
+            {
+                visual.Popup.IsOpen = false;
+            }
+        }
+    }
+
+    private void OpenNewCompanyForm()
+    {
+        _companyForm.PrepareForNew();
+
+        HideHome();
+
+        ContentArea.Content = _companyForm;
+    }
+
+    private void OpenCompanyListForm()
+    {
+        HideHome();
+
+        ContentArea.Content = _companyListForm;
+    }
+
     private async Task InitializeAsync()
     {
         if (_isInitializing)
@@ -254,7 +494,8 @@ public partial class MainWindow : Window, ITransientService
 
         try
         {
-            IDataResult<List<CompanyModel>> result = await _companyApiClient.GetAllAsync();
+            IDataResult<List<CompanyModel>> result =
+                await _companyApiClient.GetAllAsync();
 
             _companyState.SetCompanies(result.Data);
 
@@ -263,8 +504,11 @@ public partial class MainWindow : Window, ITransientService
             if (activeCompany is null)
             {
                 CompanyComboBoxEdit.EditValue = null;
+
                 _periods.Clear();
+
                 _workingContext.Clear();
+
                 ShowHome();
 
                 return;
@@ -309,6 +553,7 @@ public partial class MainWindow : Window, ITransientService
             if (_periods.Count == 0)
             {
                 PeriodComboBoxEdit.EditValue = null;
+
                 _workingContext.Clear();
 
                 CompanyModel? company = _companyState.ActiveCompany;
@@ -344,7 +589,7 @@ public partial class MainWindow : Window, ITransientService
     {
         DateOnly today = DateOnly.FromDateTime(DateTime.Today);
 
-        List<PeriodSelectionItem> periodList = periods.ToList();
+        List<PeriodSelectionItem> periodList = [.. periods];
 
         PeriodSelectionItem? currentPeriod = periodList.FirstOrDefault(
             item =>
@@ -377,30 +622,18 @@ public partial class MainWindow : Window, ITransientService
         return 0;
     }
 
-    private void ToggleSubMenu(FrameworkElement subMenu)
-    {
-        bool isVisible = subMenu.Visibility == Visibility.Visible;
-
-        CommercialSubMenu.Visibility = Visibility.Collapsed;
-        CurrentAccountSubMenu.Visibility = Visibility.Collapsed;
-        AccountingSubMenu.Visibility = Visibility.Collapsed;
-
-        subMenu.Visibility = isVisible
-            ? Visibility.Collapsed
-            : Visibility.Visible;
-    }
-
     private void ShowHome()
     {
         ContentArea.Content = null;
-        HomeContent.Visibility = Visibility.Visible;
+
+        HomeContent.Visibility = System.Windows.Visibility.Visible;
 
         UpdateHomeContext();
     }
 
     private void HideHome()
     {
-        HomeContent.Visibility = Visibility.Collapsed;
+        HomeContent.Visibility = System.Windows.Visibility.Collapsed;
     }
 
     private void ShowPlaceholder(string title)
@@ -414,28 +647,40 @@ public partial class MainWindow : Window, ITransientService
 
         Border border = new()
         {
-            Margin = new Thickness(40),
+            Margin = new System.Windows.Thickness(40),
+
             Background = System.Windows.Media.Brushes.White,
+
             BorderBrush = new System.Windows.Media.SolidColorBrush(
                 System.Windows.Media.Color.FromRgb(229, 231, 235)),
-            BorderThickness = new Thickness(1),
+
+            BorderThickness = new System.Windows.Thickness(1),
+
             CornerRadius = new CornerRadius(8)
         };
 
         TextBlock textBlock = new()
         {
             Text = $"{title}\n\nBu modül henüz hazırlanıyor.",
+
             FontSize = 20,
+
             Foreground = new System.Windows.Media.SolidColorBrush(
                 System.Windows.Media.Color.FromRgb(75, 85, 99)),
+
             HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+
             VerticalAlignment = System.Windows.VerticalAlignment.Center,
+
             TextAlignment = TextAlignment.Center,
+
             TextWrapping = TextWrapping.Wrap,
+
             MaxWidth = 700
         };
 
         border.Child = textBlock;
+
         grid.Children.Add(border);
 
         ContentArea.Content = grid;
@@ -444,6 +689,7 @@ public partial class MainWindow : Window, ITransientService
     private void UpdateHomeContext()
     {
         CompanyModel? company = _workingContext.ActiveCompany;
+
         CompanyPeriodModel? period = _workingContext.ActivePeriod;
 
         if (company is null)
@@ -468,6 +714,65 @@ public partial class MainWindow : Window, ITransientService
     #endregion Methods
 
     #region Nested Types
+
+    private sealed class MenuDefinition
+    {
+        #region Properties
+
+        public string Text { get; }
+
+        public Action? Action { get; }
+
+        public List<MenuDefinition> Children { get; }
+
+        public bool HasChildren => Children.Count > 0;
+
+        #endregion Properties
+
+        #region Constructors
+
+        public MenuDefinition(string text , Action? action = null , List<MenuDefinition>? children = null)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(text);
+
+            Text = text;
+            Action = action;
+            Children = children ?? [];
+        }
+
+        #endregion Constructors
+    }
+
+    private sealed class MenuVisual
+    {
+        #region Properties
+
+        public MenuDefinition Definition { get; }
+
+        public MenuVisual? Parent { get; }
+
+        public Border Item { get; }
+
+        public Popup? Popup { get; set; }
+
+        public List<MenuVisual> Children { get; } = [];
+
+        #endregion Properties
+
+        #region Constructors
+
+        public MenuVisual(MenuDefinition definition , MenuVisual? parent , Border item)
+        {
+            ArgumentNullException.ThrowIfNull(definition);
+            ArgumentNullException.ThrowIfNull(item);
+
+            Definition = definition;
+            Parent = parent;
+            Item = item;
+        }
+
+        #endregion Constructors
+    }
 
     private sealed class PeriodSelectionItem
     {

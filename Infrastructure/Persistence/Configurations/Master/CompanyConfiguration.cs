@@ -30,6 +30,14 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
             .HasMaxLength(20)
             .IsRequired();
 
+        builder.Property(company => company.TcIdentityNumber)
+            .HasMaxLength(11);
+
+        builder.Property(company => company.EstablishmentDate)
+            .IsRequired();
+
+        builder.Property(company => company.ClosingDate);
+
         builder.Property(company => company.TradeRegistryNumber)
             .HasMaxLength(50);
 

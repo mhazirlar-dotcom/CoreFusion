@@ -5,6 +5,7 @@
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid">
 
     <Grid Margin="10">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -14,14 +15,14 @@
                          Grid.Row="0">
 
             <dxg:GridControl.View>
-                <dxg:TableView Style="{StaticResource ReadOnlyTableViewStyle}"
-                               ShowAutoFilterRow="False" ShowCriteriaInAutoFilterRow="False" />
+                <dxg:TableView Style="{StaticResource ReadOnlyTableViewStyle}" />
             </dxg:GridControl.View>
 
             <dxg:GridControl.Columns>
+
                 <dxg:GridColumn FieldName="Name"
                                 Header="Firma Adı"
-                                Width="400"
+                                Width="300"
                                 HorizontalHeaderContentAlignment="Center" />
 
                 <dxg:GridColumn FieldName="ShortName"
@@ -29,24 +30,29 @@
                                 Width="150"
                                 HorizontalHeaderContentAlignment="Center" />
 
+                <dxg:GridColumn FieldName="TaxOfficeName"
+                                Header="Vergi Dairesi"
+                                Width="200"
+                                HorizontalHeaderContentAlignment="Center" />
+
                 <dxg:GridColumn FieldName="TaxNumber"
                                 Header="Vergi No"
                                 Width="140"
                                 HorizontalHeaderContentAlignment="Center" />
 
-                <dxg:GridColumn FieldName="TradeRegistryNumber"
-                                Header="Ticaret Sicil No"
-                                Width="150"
+                <dxg:GridColumn FieldName="TcIdentityNumber"
+                                Header="TC Kimlik No"
+                                Width="140"
                                 HorizontalHeaderContentAlignment="Center" />
 
-                <dxg:GridColumn FieldName="MersisNumber"
-                                Header="MERSİS No"
-                                Width="150"
+                <dxg:GridColumn FieldName="EstablishmentDate"
+                                Header="Kuruluş Tarihi"
+                                Width="130"
                                 HorizontalHeaderContentAlignment="Center" />
 
-                <dxg:GridColumn FieldName="Website"
-                                Header="Web Sitesi"
-                                Width="200"
+                <dxg:GridColumn FieldName="ClosingDate"
+                                Header="Kapanış Tarihi"
+                                Width="130"
                                 HorizontalHeaderContentAlignment="Center" />
 
                 <dxg:GridColumn FieldName="IsActive"
@@ -78,7 +84,7 @@
                              Click="EditButton_Click" />
 
             <dx:SimpleButton Content="Dönemler"
-                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Refresh.svg'}"
+                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Calendar.svg'}"
                              GlyphHeight="16"
                              GlyphWidth="16"
                              Style="{StaticResource GridActionButtonStyle}"

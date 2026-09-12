@@ -10,6 +10,76 @@
         Background="#F5F6F8"
         Loaded="MainWindow_Loaded">
 
+    <Window.Resources>
+
+        <Style x:Key="CascadingMenuItemStyle"
+               TargetType="{x:Type Border}">
+
+            <Setter Property="Height"
+                    Value="34" />
+
+            <Setter Property="Margin"
+                    Value="0,1,0,1" />
+
+            <Setter Property="Padding"
+                    Value="12,0" />
+
+            <Setter Property="Background"
+                    Value="Transparent" />
+
+            <Setter Property="CornerRadius"
+                    Value="4" />
+
+            <Setter Property="Cursor"
+                    Value="Hand" />
+
+            <Style.Triggers>
+
+                <Trigger Property="IsMouseOver"
+                         Value="True">
+
+                    <Setter Property="Background"
+                            Value="#374151" />
+
+                </Trigger>
+
+            </Style.Triggers>
+
+        </Style>
+
+        <Style x:Key="CascadingMenuTextStyle"
+               TargetType="{x:Type TextBlock}">
+
+            <Setter Property="Foreground"
+                    Value="#F9FAFB" />
+
+            <Setter Property="FontSize"
+                    Value="13" />
+
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+
+        </Style>
+
+        <Style x:Key="CascadingMenuArrowStyle"
+               TargetType="{x:Type TextBlock}">
+
+            <Setter Property="Foreground"
+                    Value="#9CA3AF" />
+
+            <Setter Property="FontSize"
+                    Value="14" />
+
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+
+            <Setter Property="HorizontalAlignment"
+                    Value="Right" />
+
+        </Style>
+
+    </Window.Resources>
+
     <Grid>
 
         <Grid.RowDefinitions>
@@ -147,103 +217,8 @@
                                   VerticalScrollBarVisibility="Auto"
                                   HorizontalScrollBarVisibility="Disabled">
 
-                        <StackPanel Margin="10,20">
-
-                            <!-- Ana Sayfa -->
-
-                            <dx:SimpleButton Content="Ana Sayfa"
-                                             Style="{StaticResource MenuButtonStyle}"
-                                             Click="HomeButton_Click" />
-
-                            <!-- Ticari -->
-
-                            <dx:SimpleButton Content="Ticari"
-                                             Style="{StaticResource MenuButtonStyle}"
-                                             Click="CommercialButton_Click" />
-
-                            <StackPanel x:Name="CommercialSubMenu"
-                                        Visibility="Collapsed"
-                                        Margin="15,0,0,5">
-
-                                <dx:SimpleButton Content="Firmalar"
-                                                 Style="{StaticResource MenuButtonStyle}"
-                                                 Click="CompaniesButton_Click" />
-
-                                <dx:SimpleButton Content="Ürünler"
-                                                 Style="{StaticResource MenuButtonStyle}"
-                                                 Click="ProductsButton_Click" />
-
-                                <dx:SimpleButton Content="Tedarikçiler"
-                                                 Style="{StaticResource MenuButtonStyle}"
-                                                 Click="SuppliersButton_Click" />
-
-                                <dx:SimpleButton Content="Satın Alma"
-                                                 Style="{StaticResource MenuButtonStyle}"
-                                                 Click="PurchasingButton_Click" />
-
-                                <dx:SimpleButton Content="Depolar"
-                                                 Style="{StaticResource MenuButtonStyle}"
-                                                 Click="WarehousesButton_Click" />
-
-                            </StackPanel>
-
-                            <!-- Cari -->
-
-                            <dx:SimpleButton Content="Cari"
-                                             Style="{StaticResource MenuButtonStyle}"
-                                             Click="CurrentAccountButton_Click" />
-
-                            <StackPanel x:Name="CurrentAccountSubMenu"
-                                        Visibility="Collapsed"
-                                        Margin="15,0,0,5">
-
-                                <dx:SimpleButton Content="Cari Kartlar"
-                                                 Style="{StaticResource MenuButtonStyle}"
-                                                 Click="CurrentCardsButton_Click" />
-
-                                <dx:SimpleButton Content="Cari Hareketler"
-                                                 Style="{StaticResource MenuButtonStyle}"
-                                                 Click="CurrentTransactionsButton_Click" />
-
-                            </StackPanel>
-
-                            <!-- Muhasebe -->
-
-                            <dx:SimpleButton Content="Muhasebe"
-                                             Style="{StaticResource MenuButtonStyle}"
-                                             Click="AccountingButton_Click" />
-
-                            <StackPanel x:Name="AccountingSubMenu"
-                                        Visibility="Collapsed"
-                                        Margin="15,0,0,5">
-
-                                <dx:SimpleButton Content="Hesap Planı"
-                                                 Style="{StaticResource MenuButtonStyle}"
-                                                 Click="AccountPlanButton_Click" />
-
-                                <dx:SimpleButton Content="Fişler"
-                                                 Style="{StaticResource MenuButtonStyle}"
-                                                 Click="VouchersButton_Click" />
-
-                                <dx:SimpleButton Content="Raporlar"
-                                                 Style="{StaticResource MenuButtonStyle}"
-                                                 Click="ReportsButton_Click" />
-
-                            </StackPanel>
-
-                            <!-- CRM -->
-
-                            <dx:SimpleButton Content="CRM"
-                                             Style="{StaticResource MenuButtonStyle}"
-                                             Click="CrmButton_Click" />
-
-                            <!-- İnsan Kaynakları -->
-
-                            <dx:SimpleButton Content="İnsan Kaynakları"
-                                             Style="{StaticResource MenuButtonStyle}"
-                                             Click="HumanResourcesButton_Click" />
-
-                        </StackPanel>
+                        <StackPanel x:Name="MainMenuPanel"
+                                    Margin="10,12" />
 
                     </ScrollViewer>
 
@@ -284,30 +259,30 @@
                             BorderThickness="1">
 
                         <StackPanel VerticalAlignment="Center"
-                        HorizontalAlignment="Center">
+                                    HorizontalAlignment="Center">
 
                             <TextBlock Text="CoreFusion"
-                           FontSize="28"
-                           FontWeight="Bold"
-                           Foreground="#1F2937"
-                           HorizontalAlignment="Center" />
+                                       FontSize="28"
+                                       FontWeight="Bold"
+                                       Foreground="#1F2937"
+                                       HorizontalAlignment="Center" />
 
                             <TextBlock Text="Hoş Geldiniz"
-                           FontSize="18"
-                           FontWeight="Bold"
-                           Foreground="#1F2937"
-                           Margin="0,10,0,20"
-                           HorizontalAlignment="Center" />
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Foreground="#1F2937"
+                                       Margin="0,10,0,20"
+                                       HorizontalAlignment="Center" />
 
                             <TextBlock x:Name="HomeContextText"
-                           Text="Lütfen firma ve dönem seçiniz."
-                           FontSize="20"
-                           FontWeight="Bold"
-                           Foreground="#9B1C5A"
-                           TextAlignment="Center"
-                           TextWrapping="Wrap"
-                           MaxWidth="700"
-                           HorizontalAlignment="Center" />
+                                       Text="Lütfen firma ve dönem seçiniz."
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Foreground="#9B1C5A"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       MaxWidth="700"
+                                       HorizontalAlignment="Center" />
 
                         </StackPanel>
 
@@ -316,6 +291,7 @@
                 </Grid>
 
             </Grid>
+
         </Grid>
 
     </Grid>

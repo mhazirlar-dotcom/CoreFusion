@@ -46,10 +46,6 @@
                                           behavior:ProperCaseBehavior.IsEnabled="True" />
                         </dxlc:LayoutItem>
 
-                        <dxlc:LayoutItem Label="Vergi No">
-                            <dxe:TextEdit x:Name="TaxNumberTextEdit" />
-                        </dxlc:LayoutItem>
-
                         <dxlc:LayoutItem Label="Vergi Dairesi">
                             <dxe:ComboBoxEdit x:Name="TaxOfficeComboBox"
                                               IncrementalFiltering="True"
@@ -57,6 +53,29 @@
                                               ValidateOnTextInput="False"
                                               AutoComplete="False"
                                               ImmediatePopup="True" />
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Vergi No">
+                            <dxe:TextEdit x:Name="TaxNumberTextEdit" />
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="TC Kimlik No">
+                            <dxe:TextEdit x:Name="TcIdentityNumberTextEdit"
+                                          MaxLength="11" />
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Kuruluş Tarihi">
+                            <dxe:DateEdit x:Name="EstablishmentDateEdit"
+                                          Mask="dd.MM.yyyy"
+                                          MaskUseAsDisplayFormat="True"
+                                          MaskType="DateTimeAdvancingCaret" />
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Kapanış Tarihi">
+                            <dxe:DateEdit x:Name="ClosingDateEdit"
+                                          Mask="dd.MM.yyyy"
+                                          MaskUseAsDisplayFormat="True"
+                                          MaskType="DateTimeAdvancingCaret" />
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutItem Label="Ticaret Sicil No">
@@ -314,5 +333,4 @@
         </StackPanel>
 
     </Grid>
-
 </UserControl>

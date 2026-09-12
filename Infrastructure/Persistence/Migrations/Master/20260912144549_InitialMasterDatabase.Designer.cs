@@ -4,16 +4,19 @@ using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Infrastructure.Persistence.Migrations.Master
 {
     [DbContext(typeof(CoreFusionMasterDbContext))]
-    partial class CoreFusionMasterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260912144549_InitialMasterDatabase")]
+    partial class InitialMasterDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,10 +30,16 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateOnly?>("ClosingDate")
+                        .HasColumnType("date");
+
                     b.Property<string>("DatabaseName")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateOnly>("EstablishmentDate")
+                        .HasColumnType("date");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -62,6 +71,11 @@ namespace Infrastructure.Migrations
 
                     b.Property<Guid>("TaxOfficeId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TcIdentityNumber")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<string>("TradeRegistryNumber")
                         .IsRequired()
