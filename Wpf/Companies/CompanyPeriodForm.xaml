@@ -6,7 +6,6 @@
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid">
 
     <Grid Margin="10">
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -31,7 +30,6 @@
                 Visibility="Collapsed">
 
             <Grid>
-
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="160" />
                     <ColumnDefinition Width="220" />
@@ -100,7 +98,6 @@
                          SelectionMode="Row">
 
             <dxg:GridControl.View>
-
                 <dxg:TableView AllowEditing="False"
                                AllowGrouping="False"
                                AllowSorting="True"
@@ -109,7 +106,6 @@
                                ShowGroupPanel="False"
                                ShowCriteriaInAutoFilterRow="False"
                                Style="{StaticResource ReadOnlyTableViewStyle}" />
-
             </dxg:GridControl.View>
 
             <dxg:GridControl.Columns>
@@ -133,42 +129,52 @@
 
         </dxg:GridControl>
 
-        <StackPanel Grid.Row="3"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0,8,0,0">
+        <Grid Grid.Row="3"
+              Margin="0,8,0,0">
 
-            <dx:SimpleButton Content="Yeni"
-                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Add.svg'}"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <dx:SimpleButton Grid.Column="0"
+                             Content="Firma Listesi"
+                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Navigation.svg'}"
                              GlyphHeight="16"
                              GlyphWidth="16"
                              Style="{StaticResource GridActionButtonStyle}"
-                             Click="NewButton_Click" />
+                             HorizontalAlignment="Left"
+                             Click="CompanyListButton_Click" />
 
-            <dx:SimpleButton Content="Düzenle"
-                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Edit.svg'}"
-                             GlyphHeight="16"
-                             GlyphWidth="16"
-                             Style="{StaticResource GridActionButtonStyle}"
-                             Click="EditButton_Click" />
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
 
-            <dx:SimpleButton Content="Sil"
-                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Delete.svg'}"
-                             GlyphHeight="16"
-                             GlyphWidth="16"
-                             Style="{StaticResource GridActionButtonStyle}"
-                             Click="DeleteButton_Click" />
+                <dx:SimpleButton Content="Yeni"
+                                 Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Add.svg'}"
+                                 GlyphHeight="16"
+                                 GlyphWidth="16"
+                                 Style="{StaticResource GridActionButtonStyle}"
+                                 Click="NewButton_Click" />
 
-            <dx:SimpleButton Content="Yenile"
-                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Refresh.svg'}"
-                             GlyphHeight="16"
-                             GlyphWidth="16"
-                             Style="{StaticResource GridActionButtonStyle}"
-                             Margin="0"
-                             Click="RefreshButton_Click" />
+                <dx:SimpleButton Content="Düzenle"
+                                 Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Edit.svg'}"
+                                 GlyphHeight="16"
+                                 GlyphWidth="16"
+                                 Style="{StaticResource GridActionButtonStyle}"
+                                 Click="EditButton_Click" />
 
-        </StackPanel>
+                <dx:SimpleButton Content="Sil"
+                                 Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Delete.svg'}"
+                                 GlyphHeight="16"
+                                 GlyphWidth="16"
+                                 Style="{StaticResource GridActionButtonStyle}"
+                                 Margin="0"
+                                 Click="DeleteButton_Click" />
+
+            </StackPanel>
+
+        </Grid>
 
     </Grid>
-
 </UserControl>

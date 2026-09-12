@@ -23,6 +23,9 @@ public partial class CompanyListForm : UserControl, ITransientService
     public event EventHandler? NewCompanyRequested;
     public event EventHandler<CompanyModel>? EditCompanyRequested;
     public event EventHandler<CompanyModel>? PeriodsRequested;
+    public event EventHandler<CompanyModel>? PartnersRequested;
+    public event EventHandler<CompanyModel>? AddressesRequested;
+    public event EventHandler<CompanyModel>? ContactsRequested;
 
     #endregion Events
 
@@ -49,10 +52,7 @@ public partial class CompanyListForm : UserControl, ITransientService
 
     private async void CompanyListForm_Loaded(object sender , RoutedEventArgs e)
     {
-        if (_companyState.Companies.Count == 0)
-        {
-            await LoadDataAsync();
-        }
+        await LoadDataAsync();
     }
 
     private void NewButton_Click(object sender , RoutedEventArgs e)
@@ -92,6 +92,54 @@ public partial class CompanyListForm : UserControl, ITransientService
         PeriodsRequested?.Invoke(this , selectedCompany);
     }
 
+    private void PartnersButton_Click(object sender , RoutedEventArgs e)
+    {
+        if (CompaniesGridControl.SelectedItem is not CompanyModel selectedCompany)
+        {
+            MessageBox.Show(
+                "Lütfen ortaklarını görüntülemek istediğiniz firmayı seçin." ,
+                "Firma Ortakları" ,
+                MessageBoxButton.OK ,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        PartnersRequested?.Invoke(this , selectedCompany);
+    }
+
+    private void AddressesButton_Click(object sender , RoutedEventArgs e)
+    {
+        if (CompaniesGridControl.SelectedItem is not CompanyModel selectedCompany)
+        {
+            MessageBox.Show(
+                "Lütfen adreslerini görüntülemek istediğiniz firmayı seçin." ,
+                "Firma Adresleri" ,
+                MessageBoxButton.OK ,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        AddressesRequested?.Invoke(this , selectedCompany);
+    }
+
+    private void ContactsButton_Click(object sender , RoutedEventArgs e)
+    {
+        if (CompaniesGridControl.SelectedItem is not CompanyModel selectedCompany)
+        {
+            MessageBox.Show(
+                "Lütfen iletişim bilgilerini görüntülemek istediğiniz firmayı seçin." ,
+                "Firma İletişim Bilgileri" ,
+                MessageBoxButton.OK ,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        ContactsRequested?.Invoke(this , selectedCompany);
+    }
+
     private async void DeleteButton_Click(object sender , RoutedEventArgs e)
     {
         if (CompaniesGridControl.SelectedItem is not CompanyModel selectedCompany)
@@ -119,11 +167,6 @@ public partial class CompanyListForm : UserControl, ITransientService
         await DeleteCompanyAsync(selectedCompany);
     }
 
-    private async void RefreshButton_Click(object sender , RoutedEventArgs e)
-    {
-        await LoadDataAsync();
-    }
-
     #endregion Events
 
     #region Methods
@@ -146,6 +189,7 @@ public partial class CompanyListForm : UserControl, ITransientService
             }
 
             _companyState.SetCompanies(result.Data);
+            CompaniesGridControl.RefreshData();
         }
         catch (Exception exception)
         {
@@ -174,7 +218,7 @@ public partial class CompanyListForm : UserControl, ITransientService
                 return;
             }
 
-            _companyState.Remove(company.Id);
+            await LoadDataAsync();
 
             MessageBox.Show(
                 result.Message ,

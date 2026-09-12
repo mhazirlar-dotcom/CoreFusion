@@ -21,6 +21,12 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
 
     #endregion Fields
 
+    #region Events
+
+    public event EventHandler? CompanyListRequested;
+
+    #endregion Events
+
     #region Constructors
 
     public CompanyPeriodForm(ICompanyPeriodApiClient companyPeriodApiClient)
@@ -54,6 +60,7 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
         _editingPeriodId = null;
 
         DateTime today = DateTime.Today;
+
         DateTime yearEnd = new(
             today.Year,
             12,
@@ -156,11 +163,6 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
                 MessageBoxButton.OK ,
                 MessageBoxImage.Error);
         }
-    }
-
-    private async void RefreshButton_Click(object sender , RoutedEventArgs e)
-    {
-        await LoadPeriodsAsync();
     }
 
     private async void SaveButton_Click(object sender , RoutedEventArgs e)
@@ -295,6 +297,11 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
     private void CancelButton_Click(object sender , RoutedEventArgs e)
     {
         HideEditPanel();
+    }
+
+    private void CompanyListButton_Click(object sender , RoutedEventArgs e)
+    {
+        CompanyListRequested?.Invoke(this , EventArgs.Empty);
     }
 
     #endregion Events
