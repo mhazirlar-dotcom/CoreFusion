@@ -17,6 +17,7 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
     private readonly ObservableCollection<CompanyPeriodModel> _periods = [];
     private Guid? _companyId;
     private Guid? _editingPeriodId;
+    private string _companyName = string.Empty;
 
     #endregion Fields
 
@@ -52,8 +53,14 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
 
         _editingPeriodId = null;
 
-        StartDateEdit.EditValue = DateTime.Today;
-        EndDateEdit.EditValue = DateTime.Today.AddYears(1).AddDays(-1);
+        DateTime today = DateTime.Today;
+        DateTime yearEnd = new(
+            today.Year,
+            12,
+            31);
+
+        StartDateEdit.EditValue = today;
+        EndDateEdit.EditValue = yearEnd;
 
         EditPanel.Visibility = Visibility.Visible;
     }
@@ -104,7 +111,9 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
         }
 
         MessageBoxResult result = MessageBox.Show(
-            $"{selectedPeriod.StartDate:dd/MM/yyyy} - {selectedPeriod.EndDate:dd/MM/yyyy} dönemi silinecek. Devam etmek istiyor musunuz?",
+            $"{_companyName}\n\n" +
+            $"{selectedPeriod.StartDate:dd.MM.yyyy} - {selectedPeriod.EndDate:dd.MM.yyyy} dönemi silinecek.\n\n" +
+            "Devam etmek istiyor musunuz?",
             "Dönem Sil",
             MessageBoxButton.YesNo,
             MessageBoxImage.Question);
@@ -181,11 +190,25 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
 
         DateOnly startDateOnly = DateOnly.FromDateTime(startDate);
         DateOnly endDateOnly = DateOnly.FromDateTime(endDate);
+        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
 
         if (startDateOnly > endDateOnly)
         {
             MessageBox.Show(
                 "Başlangıç tarihi, bitiş tarihinden büyük olamaz." ,
+                "Dönem" ,
+                MessageBoxButton.OK ,
+                MessageBoxImage.Warning);
+
+            return;
+        }
+
+        if (_editingPeriodId is null &&
+            startDateOnly.Year > today.Year)
+        {
+            MessageBox.Show(
+                $"Yeni dönem yalnızca {today.Year} yılı veya daha önceki yıllar için oluşturulabilir.\n\n" +
+                $"{startDateOnly:dd.MM.yyyy} tarihi ile yeni dönem oluşturulamaz." ,
                 "Dönem" ,
                 MessageBoxButton.OK ,
                 MessageBoxImage.Warning);
@@ -278,10 +301,15 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
 
     #region Methods
 
-    public async Task LoadCompanyAsync(Guid companyId)
+    public async Task LoadCompanyAsync(Guid companyId , string companyName)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(companyName);
+
         _companyId = companyId;
+        _companyName = companyName;
         _editingPeriodId = null;
+
+        CompanyNameTextBlock.Text = $"{_companyName} - Firma Dönemleri";
 
         HideEditPanel();
 

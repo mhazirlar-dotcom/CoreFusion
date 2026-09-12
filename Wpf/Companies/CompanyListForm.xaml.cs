@@ -81,8 +81,8 @@ public partial class CompanyListForm : UserControl, ITransientService
         if (CompaniesGridControl.SelectedItem is not CompanyModel selectedCompany)
         {
             MessageBox.Show(
-                "Lütfen dönemlerini yönetmek istediğiniz firmayı seçin." ,
-                "Dönemler" ,
+                "Lütfen dönemlerini görüntülemek istediğiniz firmayı seçin." ,
+                "Firma Dönemleri" ,
                 MessageBoxButton.OK ,
                 MessageBoxImage.Information);
 

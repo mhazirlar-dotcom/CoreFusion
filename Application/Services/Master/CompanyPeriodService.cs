@@ -3,7 +3,6 @@ using Abstractions.Application.Services.Master;
 using Abstractions.Core.DependencyInjection;
 using Abstractions.Core.Results;
 using Abstractions.Infrastructure.Persistence.Repositories;
-using Core.Exceptions;
 using Core.Results;
 using Domain.Master.Companies;
 
@@ -13,8 +12,8 @@ public class CompanyPeriodService(IMasterRepository<CompanyPeriod , Guid> compan
 {
     #region Fields
 
-    private readonly IMasterRepository<CompanyPeriod, Guid> _companyPeriodRepository = companyPeriodRepository;
-    private readonly IMasterRepository<Company, Guid> _companyRepository = companyRepository;
+    private readonly IMasterRepository<CompanyPeriod , Guid> _companyPeriodRepository = companyPeriodRepository;
+    private readonly IMasterRepository<Company , Guid> _companyRepository = companyRepository;
 
     #endregion Fields
 
@@ -24,16 +23,42 @@ public class CompanyPeriodService(IMasterRepository<CompanyPeriod , Guid> compan
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        ValidateDates(request.StartDate , request.EndDate);
+        if (request.StartDate > request.EndDate)
+        {
+            return new DataResult<Guid>(
+                Guid.Empty ,
+                false ,
+                "Dönem başlangıç tarihi, bitiş tarihinden büyük olamaz.");
+        }
 
-        await ValidateCompanyAsync(request.CompanyId , cancellationToken);
+        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
 
-        await ValidatePeriodOverlapAsync(
+        if (request.StartDate.Year > today.Year)
+        {
+            return new DataResult<Guid>(
+                Guid.Empty ,
+                false ,
+                $"Yeni dönem yalnızca {today.Year} yılı veya daha önceki yıllar için oluşturulabilir.");
+        }
+
+        await ValidateCompanyAsync(
+            request.CompanyId ,
+            cancellationToken);
+
+        bool hasOverlap = await HasPeriodOverlapAsync(
             request.CompanyId ,
             request.StartDate ,
             request.EndDate ,
             null ,
             cancellationToken);
+
+        if (hasOverlap)
+        {
+            return new DataResult<Guid>(
+                Guid.Empty ,
+                false ,
+                "Girilen tarih aralığı mevcut bir firma dönemi ile çakışıyor.");
+        }
 
         CompanyPeriod companyPeriod = new()
         {
@@ -44,7 +69,9 @@ public class CompanyPeriodService(IMasterRepository<CompanyPeriod , Guid> compan
             IsActive = true
         };
 
-        await _companyPeriodRepository.AddAsync(companyPeriod , cancellationToken);
+        await _companyPeriodRepository.AddAsync(
+            companyPeriod ,
+            cancellationToken);
 
         return new DataResult<Guid>(
             companyPeriod.Id ,
@@ -54,7 +81,9 @@ public class CompanyPeriodService(IMasterRepository<CompanyPeriod , Guid> compan
 
     public async Task<IDataResult<List<CompanyPeriodModel>>> GetByCompanyIdAsync(Guid companyId , CancellationToken cancellationToken = default)
     {
-        await ValidateCompanyAsync(companyId , cancellationToken);
+        await ValidateCompanyAsync(
+            companyId ,
+            cancellationToken);
 
         List<CompanyPeriod> companyPeriods = await _companyPeriodRepository.GetAllAsync(
             companyPeriod =>
@@ -66,7 +95,9 @@ public class CompanyPeriodService(IMasterRepository<CompanyPeriod , Guid> compan
             .OrderByDescending(companyPeriod => companyPeriod.StartDate)
             .Select(MapToModel)];
 
-        return new DataResult<List<CompanyPeriodModel>>(result , true);
+        return new DataResult<List<CompanyPeriodModel>>(
+            result ,
+            true);
     }
 
     public async Task<IDataResult<CompanyPeriodModel>> GetByIdAsync(Guid companyId , Guid id , CancellationToken cancellationToken = default)
@@ -87,7 +118,12 @@ public class CompanyPeriodService(IMasterRepository<CompanyPeriod , Guid> compan
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        ValidateDates(request.StartDate , request.EndDate);
+        if (request.StartDate > request.EndDate)
+        {
+            return new Result(
+                false ,
+                "Dönem başlangıç tarihi, bitiş tarihinden büyük olamaz.");
+        }
 
         CompanyPeriod companyPeriod = await _companyPeriodRepository.GetAsync(
             item =>
@@ -96,12 +132,19 @@ public class CompanyPeriodService(IMasterRepository<CompanyPeriod , Guid> compan
                 item.IsActive,
             cancellationToken);
 
-        await ValidatePeriodOverlapAsync(
+        bool hasOverlap = await HasPeriodOverlapAsync(
             companyId ,
             request.StartDate ,
             request.EndDate ,
             request.Id ,
             cancellationToken);
+
+        if (hasOverlap)
+        {
+            return new Result(
+                false ,
+                "Girilen tarih aralığı mevcut bir firma dönemi ile çakışıyor.");
+        }
 
         companyPeriod.StartDate = request.StartDate;
         companyPeriod.EndDate = request.EndDate;
@@ -145,16 +188,7 @@ public class CompanyPeriodService(IMasterRepository<CompanyPeriod , Guid> compan
             cancellationToken);
     }
 
-    private static void ValidateDates(DateOnly startDate , DateOnly endDate)
-    {
-        if (startDate > endDate)
-        {
-            throw new CoreValidationException(
-                "Dönem başlangıç tarihi, bitiş tarihinden büyük olamaz.");
-        }
-    }
-
-    private async Task ValidatePeriodOverlapAsync(Guid companyId , DateOnly startDate , DateOnly endDate , Guid? excludedPeriodId , CancellationToken cancellationToken)
+    private async Task<bool> HasPeriodOverlapAsync(Guid companyId , DateOnly startDate , DateOnly endDate , Guid? excludedPeriodId , CancellationToken cancellationToken)
     {
         List<CompanyPeriod> companyPeriods = await _companyPeriodRepository.GetAllAsync(
             companyPeriod =>
@@ -163,15 +197,10 @@ public class CompanyPeriodService(IMasterRepository<CompanyPeriod , Guid> compan
                 (!excludedPeriodId.HasValue || companyPeriod.Id != excludedPeriodId.Value),
             cancellationToken);
 
-        bool hasOverlap = companyPeriods.Any(companyPeriod =>
-            companyPeriod.StartDate <= endDate &&
-            companyPeriod.EndDate >= startDate);
-
-        if (hasOverlap)
-        {
-            throw new CoreValidationException(
-                "Girilen tarih aralığı mevcut bir firma dönemi ile çakışıyor.");
-        }
+        return companyPeriods.Any(
+            companyPeriod =>
+                companyPeriod.StartDate <= endDate &&
+                companyPeriod.EndDate >= startDate);
     }
 
     private static CompanyPeriodModel MapToModel(CompanyPeriod companyPeriod)

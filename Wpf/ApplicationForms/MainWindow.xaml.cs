@@ -57,6 +57,7 @@ public partial class MainWindow : Window, ITransientService
         PeriodComboBoxEdit.ItemsSource = _periods;
 
         _workingContext.ContextChanged += WorkingContext_ContextChanged;
+
         _companyListForm.NewCompanyRequested += CompanyListForm_NewCompanyRequested;
         _companyListForm.EditCompanyRequested += CompanyListForm_EditCompanyRequested;
         _companyListForm.PeriodsRequested += CompanyListForm_PeriodsRequested;
@@ -78,7 +79,7 @@ public partial class MainWindow : Window, ITransientService
             return;
         }
 
-        CompanyModel? company = (CompanyModel)e.NewValue;
+        CompanyModel? company = e.NewValue as CompanyModel;
 
         if (company is null)
         {
@@ -98,7 +99,7 @@ public partial class MainWindow : Window, ITransientService
             return;
         }
 
-        PeriodSelectionItem? selectedPeriod = (PeriodSelectionItem)e.NewValue;
+        PeriodSelectionItem? selectedPeriod = e.NewValue as PeriodSelectionItem;
 
         if (selectedPeriod is null)
         {
@@ -215,7 +216,9 @@ public partial class MainWindow : Window, ITransientService
 
         ContentArea.Content = _companyPeriodForm;
 
-        await _companyPeriodForm.LoadCompanyAsync(company.Id);
+        await _companyPeriodForm.LoadCompanyAsync(
+            company.Id ,
+            company.Name);
     }
 
     private void MinimizeButton_Click(object sender , RoutedEventArgs e)
@@ -272,6 +275,7 @@ public partial class MainWindow : Window, ITransientService
             _workingContext.SetCompany(activeCompany);
 
             await LoadPeriodsAsync(activeCompany.Id);
+
             ShowHome();
         }
         catch (Exception exception)
@@ -318,6 +322,7 @@ public partial class MainWindow : Window, ITransientService
             }
 
             PeriodSelectionItem? selectedPeriod = GetDefaultPeriod(_periods);
+
             PeriodComboBoxEdit.EditValue = selectedPeriod;
 
             if (selectedPeriod is not null)
@@ -339,7 +344,7 @@ public partial class MainWindow : Window, ITransientService
     {
         DateOnly today = DateOnly.FromDateTime(DateTime.Today);
 
-        List<PeriodSelectionItem> periodList = [.. periods];
+        List<PeriodSelectionItem> periodList = periods.ToList();
 
         PeriodSelectionItem? currentPeriod = periodList.FirstOrDefault(
             item =>

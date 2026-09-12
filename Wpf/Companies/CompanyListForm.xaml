@@ -14,11 +14,11 @@
                          Grid.Row="0">
 
             <dxg:GridControl.View>
-                <dxg:TableView Style="{StaticResource ReadOnlyTableViewStyle}" />
+                <dxg:TableView Style="{StaticResource ReadOnlyTableViewStyle}"
+                               ShowAutoFilterRow="False" ShowCriteriaInAutoFilterRow="False" />
             </dxg:GridControl.View>
 
             <dxg:GridControl.Columns>
-
                 <dxg:GridColumn FieldName="Name"
                                 Header="Firma Adı"
                                 Width="400"
@@ -78,7 +78,7 @@
                              Click="EditButton_Click" />
 
             <dx:SimpleButton Content="Dönemler"
-                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Calendar.svg'}"
+                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Refresh.svg'}"
                              GlyphHeight="16"
                              GlyphWidth="16"
                              Style="{StaticResource GridActionButtonStyle}"

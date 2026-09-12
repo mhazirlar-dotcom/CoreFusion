@@ -4,7 +4,9 @@
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
              xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid">
+
     <Grid Margin="10">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -27,7 +29,9 @@
                 BorderBrush="#E5E7EB"
                 Background="White"
                 Visibility="Collapsed">
+
             <Grid>
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="160" />
                     <ColumnDefinition Width="220" />
@@ -44,7 +48,7 @@
                               Grid.Column="1"
                               Height="32"
                               Mask="dd.MM.yyyy"
-                              MaskType="DateTime"
+                              MaskType="DateTimeAdvancingCaret"
                               MaskUseAsDisplayFormat="True"
                               HorizontalContentAlignment="Left"
                               VerticalContentAlignment="Center"
@@ -60,7 +64,7 @@
                               Grid.Column="3"
                               Height="32"
                               Mask="dd.MM.yyyy"
-                              MaskType="DateTime"
+                              MaskType="DateTimeAdvancingCaret"
                               MaskUseAsDisplayFormat="True"
                               HorizontalContentAlignment="Left"
                               VerticalContentAlignment="Center"
@@ -70,6 +74,7 @@
                 <StackPanel Grid.Column="4"
                             Orientation="Horizontal"
                             Margin="20,0,0,0">
+
                     <dx:SimpleButton Content="Kaydet"
                                      Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Check.svg'}"
                                      GlyphHeight="16"
@@ -83,24 +88,32 @@
                                      GlyphWidth="16"
                                      Style="{StaticResource GridActionButtonStyle}"
                                      Click="CancelButton_Click" />
+
                 </StackPanel>
+
             </Grid>
+
         </Border>
 
         <dxg:GridControl x:Name="PeriodsGridControl"
                          Grid.Row="2"
                          SelectionMode="Row">
+
             <dxg:GridControl.View>
+
                 <dxg:TableView AllowEditing="False"
                                AllowGrouping="False"
                                AllowSorting="True"
                                NavigationStyle="Row"
                                ShowAutoFilterRow="False"
                                ShowGroupPanel="False"
-                               Style="{StaticResource ReadOnlyTableViewStyle}" ShowCriteriaInAutoFilterRow="False" />
+                               ShowCriteriaInAutoFilterRow="False"
+                               Style="{StaticResource ReadOnlyTableViewStyle}" />
+
             </dxg:GridControl.View>
 
             <dxg:GridControl.Columns>
+
                 <dxg:GridColumn FieldName="StartDate"
                                 Header="Başlangıç"
                                 Width="200"
@@ -115,13 +128,16 @@
                                 Header="Aktif"
                                 Width="100"
                                 HorizontalHeaderContentAlignment="Center" />
+
             </dxg:GridControl.Columns>
+
         </dxg:GridControl>
 
         <StackPanel Grid.Row="3"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     Margin="0,8,0,0">
+
             <dx:SimpleButton Content="Yeni"
                              Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Add.svg'}"
                              GlyphHeight="16"
@@ -150,6 +166,9 @@
                              Style="{StaticResource GridActionButtonStyle}"
                              Margin="0"
                              Click="RefreshButton_Click" />
+
         </StackPanel>
+
     </Grid>
+
 </UserControl>
