@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid">
+
     <Grid Margin="10">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -19,6 +21,7 @@
             </dxg:GridControl.View>
 
             <dxg:GridControl.Columns>
+
                 <dxg:GridColumn FieldName="Name"
                                 Header="Firma Adı"
                                 Width="300"
@@ -58,6 +61,7 @@
                                 Header="Aktif"
                                 Width="80"
                                 HorizontalHeaderContentAlignment="Center" />
+
             </dxg:GridControl.Columns>
 
         </dxg:GridControl>
@@ -82,11 +86,11 @@
                                  Click="PeriodsButton_Click" />
 
                 <dx:SimpleButton Content="Ortaklar"
-                                 Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Group.svg'}"
-                                 GlyphHeight="16"
-                                 GlyphWidth="16"
-                                 Style="{StaticResource GridActionButtonStyle}"
-                                 Click="PartnersButton_Click" />
+                 Glyph="{dx:DXImage Image=UserGroup_16x16.png}"
+                 GlyphHeight="16"
+                 GlyphWidth="16"
+                 Style="{StaticResource GridActionButtonStyle}"
+                 Click="PartnersButton_Click" />
 
                 <dx:SimpleButton Content="Adresler"
                                  Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Home.svg'}"
@@ -96,11 +100,11 @@
                                  Click="AddressesButton_Click" />
 
                 <dx:SimpleButton Content="İletişim"
-                                 Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Contact.svg'}"
-                                 GlyphHeight="16"
-                                 GlyphWidth="16"
-                                 Style="{StaticResource GridActionButtonStyle}"
-                                 Click="ContactsButton_Click" />
+                 Glyph="{dx:DXImage Image=Phone_16x16.png}"
+                 GlyphHeight="16"
+                 GlyphWidth="16"
+                 Style="{StaticResource GridActionButtonStyle}"
+                 Click="ContactsButton_Click" />
 
             </StackPanel>
 

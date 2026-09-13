@@ -139,7 +139,7 @@
 
             <dx:SimpleButton Grid.Column="0"
                              Content="Firma Listesi"
-                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Navigation.svg'}"
+                             Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Undo.svg'}"
                              GlyphHeight="16"
                              GlyphWidth="16"
                              Style="{StaticResource GridActionButtonStyle}"
