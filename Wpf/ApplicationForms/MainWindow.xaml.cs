@@ -64,6 +64,9 @@ public partial class MainWindow : Window, ITransientService
         _companyListForm.EditCompanyRequested += CompanyListForm_EditCompanyRequested;
         _companyListForm.PeriodsRequested += CompanyListForm_PeriodsRequested;
 
+        _companyPeriodForm.CompanyListRequested += CompanyPeriodForm_CompanyListRequested;
+        _companyPeriodForm.PeriodsChanged += CompanyPeriodForm_PeriodsChanged;
+
         BuildMenu();
     }
 
@@ -141,6 +144,22 @@ public partial class MainWindow : Window, ITransientService
         ContentArea.Content = _companyPeriodForm;
 
         await _companyPeriodForm.LoadCompanyAsync(company.Id , company.Name);
+    }
+    private void CompanyPeriodForm_CompanyListRequested(object? sender , EventArgs e)
+    {
+        OpenCompanyListForm();
+    }
+
+    private async void CompanyPeriodForm_PeriodsChanged(object? sender , EventArgs e)
+    {
+        CompanyModel? activeCompany = _companyState.ActiveCompany;
+
+        if (activeCompany is null)
+        {
+            return;
+        }
+
+        await LoadPeriodsAsync(activeCompany.Id);
     }
 
     private void MinimizeButton_Click(object sender , RoutedEventArgs e)

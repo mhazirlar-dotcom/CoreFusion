@@ -24,6 +24,7 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
     #region Events
 
     public event EventHandler? CompanyListRequested;
+    public event EventHandler? PeriodsChanged;
 
     #endregion Events
 
@@ -87,8 +88,11 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
 
         _editingPeriodId = selectedPeriod.Id;
 
-        StartDateEdit.EditValue = selectedPeriod.StartDate.ToDateTime(TimeOnly.MinValue);
-        EndDateEdit.EditValue = selectedPeriod.EndDate.ToDateTime(TimeOnly.MinValue);
+        StartDateEdit.EditValue =
+            selectedPeriod.StartDate.ToDateTime(TimeOnly.MinValue);
+
+        EndDateEdit.EditValue =
+            selectedPeriod.EndDate.ToDateTime(TimeOnly.MinValue);
 
         EditPanel.Visibility = Visibility.Visible;
     }
@@ -148,6 +152,8 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
             }
 
             await LoadPeriodsAsync();
+
+            PeriodsChanged?.Invoke(this , EventArgs.Empty);
 
             MessageBox.Show(
                 deleteResult.Message ,
@@ -227,7 +233,8 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
                     startDateOnly,
                     endDateOnly);
 
-                IDataResult<Guid> result = await _companyPeriodApiClient.CreateAsync(request);
+                IDataResult<Guid> result =
+                    await _companyPeriodApiClient.CreateAsync(request);
 
                 if (!result.Success)
                 {
@@ -244,6 +251,8 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
 
                 await LoadPeriodsAsync();
 
+                PeriodsChanged?.Invoke(this , EventArgs.Empty);
+
                 MessageBox.Show(
                     result.Message ,
                     "Dönem Kaydet" ,
@@ -259,9 +268,10 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
                 endDateOnly,
                 true);
 
-            IResult updateResult = await _companyPeriodApiClient.UpdateAsync(
-                _companyId.Value,
-                updateRequest);
+            IResult updateResult =
+                await _companyPeriodApiClient.UpdateAsync(
+                    _companyId.Value,
+                    updateRequest);
 
             if (!updateResult.Success)
             {
@@ -277,6 +287,8 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
             HideEditPanel();
 
             await LoadPeriodsAsync();
+
+            PeriodsChanged?.Invoke(this , EventArgs.Empty);
 
             MessageBox.Show(
                 updateResult.Message ,
@@ -333,7 +345,8 @@ public partial class CompanyPeriodForm : UserControl, ITransientService
         try
         {
             IDataResult<List<CompanyPeriodModel>> result =
-                await _companyPeriodApiClient.GetByCompanyIdAsync(_companyId.Value);
+                await _companyPeriodApiClient.GetByCompanyIdAsync(
+                    _companyId.Value);
 
             if (!result.Success)
             {

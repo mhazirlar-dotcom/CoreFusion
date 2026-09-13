@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid">
-
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -15,7 +14,8 @@
 
             <dxg:GridControl.View>
                 <dxg:TableView Style="{StaticResource ReadOnlyTableViewStyle}"
-                               ShowAutoFilterRow="False" ShowCriteriaInAutoFilterRow="False" />
+                               ShowAutoFilterRow="False"
+                               ShowCriteriaInAutoFilterRow="False" />
             </dxg:GridControl.View>
 
             <dxg:GridControl.Columns>
@@ -58,12 +58,13 @@
                                 Header="Aktif"
                                 Width="80"
                                 HorizontalHeaderContentAlignment="Center" />
-
             </dxg:GridControl.Columns>
+
         </dxg:GridControl>
 
         <Grid Grid.Row="1"
               Margin="0,8,0,0">
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -81,7 +82,7 @@
                                  Click="PeriodsButton_Click" />
 
                 <dx:SimpleButton Content="Ortaklar"
-                                 Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_User.svg'}"
+                                 Glyph="{dx:DXImage 'SvgImages/Icon Builder/Actions_Group.svg'}"
                                  GlyphHeight="16"
                                  GlyphWidth="16"
                                  Style="{StaticResource GridActionButtonStyle}"
@@ -130,6 +131,7 @@
                                  Click="DeleteButton_Click" />
 
             </StackPanel>
+
         </Grid>
 
     </Grid>
